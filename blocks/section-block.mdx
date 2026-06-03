@@ -1,0 +1,118 @@
+---
+title: SiteZen Section Block
+description: The core block that wraps every Figma-converted section in your WordPress editor.
+---
+
+## What it does
+
+The **SiteZen Section** is the main Gutenberg block that holds every section you convert from Figma. Each conversion = one SiteZen Section block in WordPress.
+
+It's a **container** that:
+- Renders your converted HTML pixel-perfect on the frontend
+- Provides per-element editing controls in the WordPress sidebar (text, colors, spacing, images)
+- Auto-loads the right interactivity (tabs, accordions, sliders) without any setup
+- Stays fully responsive across desktop, tablet, mobile
+
+Every other block feature in SiteZen (Tabs, Pricing, Forms, etc.) lives **inside** a SiteZen Section block.
+
+## When to use it
+
+You don't manually add this block — it's added for you when you push a section from the SiteZen platform. But you'll interact with it constantly because every converted section IS a SiteZen Section.
+
+## Anatomy of a SiteZen Section in the editor
+
+Open any page with a converted section. Click anywhere in the section. The right sidebar shows:
+
+<Steps>
+  <Step title="Block Inspector" icon="layout" title-type="p">
+    The top panel shows you're inside a SiteZen Section. From here you can change padding, background, alignment.
+  </Step>
+
+  <Step title="Element Editor" icon="edit" title-type="p">
+    Click any sub-element (heading, button, image, card). The sidebar updates to show that element's controls — typography, colors, spacing.
+  </Step>
+
+  <Step title="Per-Block Controls" icon="settings" title-type="p">
+    Tabs, accordions, and other interactive components get their own special controls (e.g. "Tab 1 / Tab 2 / Tab 3" with TEMPLATE or INLINE mode switches).
+  </Step>
+</Steps>
+
+[SCREENSHOT: WordPress editor with a SiteZen Section selected, sidebar visible]
+
+## How elements are editable
+
+Every text node, image, and button stays editable via the block sidebar — no need to dig into HTML.
+
+**To change text:**
+1. Click the text element directly in the editor
+2. Sidebar shows text content + font controls
+3. Type new text → press Update
+
+**To swap an image:**
+1. Click the image in the editor
+2. Sidebar shows current image preview
+3. Click **Replace** → choose from media library or upload new
+
+**To change a button URL:**
+1. Click the button
+2. Sidebar shows URL field
+3. Edit and save
+
+[SCREENSHOT: Sidebar showing per-element controls for a heading]
+
+## What you can configure section-wide
+
+| Control | What it does |
+|---|---|
+| **Background color** | Section's background — overrides Figma value |
+| **Padding (top / bottom)** | Vertical breathing room around content |
+| **Alignment** | Constrained / wide / full-width |
+| **Section ID** | HTML anchor for in-page links (e.g. `#pricing`) |
+| **Hide on mobile / desktop** | Conditional visibility |
+
+[SCREENSHOT: Section-wide controls panel]
+
+## Duplicating, moving, deleting
+
+Use Gutenberg's standard block tools:
+
+- **Duplicate**: ⋯ menu → Duplicate. Creates an identical copy below.
+- **Move up / down**: arrows in block toolbar.
+- **Delete**: ⋯ menu → Remove block.
+
+All standard Gutenberg shortcuts work (Cmd/Ctrl+D to duplicate, etc.).
+
+## What happens when you save
+
+When you click **Update** in WordPress:
+
+1. The block's edited HTML is saved to post_content
+2. SiteZen's plugin generates a hashed CSS file from any inline styles
+3. The page becomes browser-cacheable (the CSS file caches forever)
+4. The next visitor sees the updated page instantly
+
+## Common issues
+
+**Block won't load / shows error**
+The page was saved with an older version of the plugin. Update the SiteZen plugin to the latest version, then re-open the page. The block re-renders.
+
+**Edits to a sub-element don't appear on the frontend**
+You may have edited within the WordPress block editor but the section uses a SiteZen Template (header, footer, tab content). Template edits happen separately — see [Templates Overview](/templates/overview).
+
+**Section content is invisible in the editor but works on frontend**
+Some custom CSS in the section may conflict with WP admin styles. Open the page → toggle to Preview mode to verify it renders correctly there.
+
+**Cannot find the SiteZen Section block in the block inserter**
+The block is **dynamic** — only inserted by the platform's push flow. You can't add it manually from the **+** inserter. If you want one in a new place, run a conversion and push there.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Tabs Block" href="/blocks/tabs" icon="columns" horizontal="false">
+    Interactive tabs with per-tab template support.
+  </Card>
+
+  <Card title="Pushing to WordPress" href="/getting-started/push-to-wordpress" icon="upload" horizontal="false">
+    How sections land in WordPress as SiteZen Section blocks.
+  </Card>
+</Columns>

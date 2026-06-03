@@ -1,0 +1,189 @@
+---
+title: Forms Block
+description: Contact forms, newsletter signups, and lead-gen forms — wired to email and integrations.
+---
+
+## What it does
+
+The Forms block creates working contact / signup / lead-gen forms in your converted section. Submissions are:
+- Validated client-side (required fields, email format)
+- Sent to your configured email address
+- Stored in WordPress (`SiteZen → Form Entries`) for review
+- Optionally forwarded to integrations (Mailchimp, ConvertKit, Webhook, etc.)
+
+SiteZen auto-detects forms in Figma when you design:
+- Input fields (text boxes, dropdowns, textareas)
+- Field labels
+- A submit button
+
+## When to use it
+
+- **Contact forms** ("Get in touch")
+- **Newsletter signups** ("Subscribe to updates")
+- **Lead capture** ("Request a demo")
+- **Custom forms** (surveys, RSVP, registration)
+
+## Supported field types
+
+| Field type | What you design in Figma | Auto-detected as |
+|---|---|---|
+| **Text input** | Single-line input box | `<input type="text">` |
+| **Email** | Input box with email validation hint | `<input type="email">` |
+| **Phone** | Input box with phone format hint | `<input type="tel">` |
+| **Textarea** | Larger multi-line box | `<textarea>` |
+| **Dropdown** | Select with chevron | `<select>` |
+| **Checkbox** | Square checkbox + label | `<input type="checkbox">` |
+| **Radio** | Circular radio + label | `<input type="radio">` |
+| **Submit button** | Button at form's end | `<button type="submit">` |
+
+[SCREENSHOT: Figma form design with various field types]
+
+## How forms are created from Figma
+
+Design as:
+- A **vertical stack** of fields (with labels above each)
+- Each field as a styled rectangle
+- A **submit button** at the bottom
+
+SiteZen generates:
+```
+<form class="sz-form" data-sz-form-id="contact">
+  <div class="sz-form-row">
+    <label>Name</label>
+    <input type="text" name="name" required>
+  </div>
+  <div class="sz-form-row">
+    <label>Email</label>
+    <input type="email" name="email" required>
+  </div>
+  ...
+  <button type="submit">Send</button>
+</form>
+```
+
+## Configuring form behavior
+
+In the WordPress editor, click the form section → sidebar shows:
+
+### Submission settings
+| Control | Effect |
+|---|---|
+| **Form ID** | Internal name (e.g. "contact", "newsletter") |
+| **Email recipient** | Where submissions are sent |
+| **Email subject** | Subject line template (supports field tokens like `{name}`) |
+| **Reply-to** | Auto-set to submitter's email address |
+| **Redirect after submit** | URL to send user to (optional) |
+| **Success message** | Shown if no redirect |
+| **Save to database** | Store in WP for review (default: on) |
+
+### Per-field settings
+Click any field to configure:
+- **Field name** (internal)
+- **Label**
+- **Placeholder**
+- **Required** (toggle)
+- **Validation** (min length, max length, regex)
+- **Default value**
+
+### Anti-spam
+| Control | Effect |
+|---|---|
+| **Honeypot** | Hidden field that bots fill in (auto-rejects on submit) — enabled by default |
+| **reCAPTCHA** | Google reCAPTCHA v3 integration (requires site key in Modules → Integrations) |
+| **Time threshold** | Minimum seconds before submit allowed (rejects instant submissions) |
+
+[SCREENSHOT: Form settings sidebar with submission and field controls]
+
+## Viewing form submissions
+
+WP Admin → **SiteZen → Form Entries**
+
+You'll see:
+- Submission date/time
+- Submitter info
+- All form field values
+- Source page URL
+- Status (read/unread)
+
+Click any entry to see full details. Bulk-export to CSV via the **Export** button.
+
+## Connecting to email marketing tools
+
+SiteZen → **Modules → Integrations** lets you forward submissions to:
+
+- **Mailchimp** (subscribe to a list)
+- **ConvertKit** (add as subscriber, tag)
+- **ActiveCampaign**
+- **HubSpot**
+- **Sendinblue / Brevo**
+- **Custom webhook** (any URL that accepts POST JSON)
+
+Per-form configuration:
+1. Form sidebar → **Integrations** section
+2. Pick which configured integration to fire on submit
+3. Map form fields to integration fields (e.g. form's "email" → Mailchimp's "EMAIL" field)
+4. Save
+
+## Custom validation
+
+For complex validation (e.g. "phone must be a US number"):
+
+1. Field sidebar → **Validation** → **Custom regex**
+2. Enter your regex pattern
+3. Set custom error message
+
+Example regex for US phone: `^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$`
+
+## Conditional fields (show/hide based on other answers)
+
+Advanced feature for surveys / complex forms:
+
+1. Click the field you want conditional
+2. Sidebar → **Show this field when** → pick another field → equals → value
+
+Example: "Show 'Number of employees' only if 'I represent' = 'a company'"
+
+## Frontend behavior
+
+- **Client-side validation** — instant error messages on blur
+- **Server-side validation** — second check on submit (security)
+- **AJAX submission** — no full page reload, smooth UX
+- **Loading state** — submit button shows spinner during processing
+- **Success / error states** — inline messages, no popups
+- **Accessibility** — proper labels, ARIA roles, keyboard navigation
+
+## Common issues
+
+**Form submits but no email arrives**
+1. Check spam folder
+2. WP Admin → SiteZen → Form Entries → confirm submission was saved (rules out plugin issue)
+3. Configure SMTP via **Modules → SMTP Setup** (WordPress default mail is unreliable)
+
+**"Form submission failed" error**
+- Connection key issue (regenerate in WP Admin → SiteZen → Settings)
+- Server-side error — check `wp-content/debug.log`
+- reCAPTCHA misconfigured — disable temporarily to test
+
+**Fields look wrong after conversion**
+SiteZen guessed wrong about field types. Click each field → fix the type in the sidebar.
+
+**Required field validation not firing**
+"Required" wasn't enabled on the field. Click the field → toggle Required.
+
+**Honeypot blocking real users**
+Some accessibility plugins fill all form fields. Disable honeypot in form sidebar.
+
+**Submissions not appearing in Mailchimp/etc.**
+Field mapping is wrong. Form sidebar → Integrations → re-map form fields to integration fields. Test with a real submission.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="SMTP Setup" href="/modules/smtp" icon="mail" horizontal="false">
+    Configure reliable email delivery for form submissions.
+  </Card>
+
+  <Card title="Integrations" href="/modules/integrations" icon="link" horizontal="false">
+    Connect forms to Mailchimp, ConvertKit, HubSpot, and more.
+  </Card>
+</Columns>

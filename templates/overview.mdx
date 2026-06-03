@@ -1,0 +1,158 @@
+---
+title: Templates Overview
+description: Save and reuse headers, footers, tab content, and more as SiteZen Templates.
+---
+
+## What templates are
+
+A **SiteZen Template** is a saved chunk of content stored as a special WordPress post type (`sz_template`). You can reference it from multiple places in your site — edit the template once, all instances update.
+
+Think of templates like CSS variables for content. Define once, use everywhere.
+
+## When to use templates
+
+| Use case | Why a template makes sense |
+|---|---|
+| **Site-wide header** | Same nav across every page; change once, updates everywhere |
+| **Site-wide footer** | Same footer across every page |
+| **Tab content** | Reuse the same tab content (e.g. "Pricing FAQ") on multiple pages |
+| **Accordion bodies** | Long answer used in 3 different FAQ sections |
+| **Slider slides** | Showcase the same case study slide on multiple pages |
+| **CPT single template** | Define what a "Team Member" page looks like when clicked |
+| **Frequently-changing content** | Edit the template, all instances update with no page-by-page edits |
+
+## Template types
+
+SiteZen supports several template types, each with a specific use:
+
+| Type | Purpose | Where it's referenced |
+|---|---|---|
+| **Header** | Site-wide top nav | WP Admin → Appearance → Header settings |
+| **Footer** | Site-wide footer | WP Admin → Appearance → Footer settings |
+| **Tab** | Tab panel content | Tabs block → tab template picker |
+| **Accordion body** | Accordion item content | Accordion block → item template picker |
+| **Slider slide** | Single slide in a slider | Slider block → slide template picker |
+| **CPT single** | Page layout for a custom post type detail page | Auto-applied to that CPT's single posts |
+| **Menu** | Reusable menu component | Header / footer / inline references |
+
+## Two ways to create a template
+
+### Method 1: Push directly to a template (recommended for new templates)
+
+1. Run a conversion on the platform
+2. On the Convert page, under **Where should this section land?**, pick **SiteZen Template**
+3. Pick the **Template type** (Header, Footer, Tab, etc.)
+4. Set the **Template title** (e.g. "Main Header v2")
+5. Click Convert → push
+6. Template is created in WordPress, available immediately
+
+[SCREENSHOT: Platform convert page with "SiteZen Template" target picked]
+
+### Method 2: Auto-create from inline content
+
+When you push tabs / accordion / slider sections, SiteZen auto-creates templates per item:
+
+- Section pushes inline content first
+- Push API extracts each item's HTML
+- Creates one template per item (e.g. "FAQ Section — Tab 1", "FAQ Section — Tab 2")
+- Wires the section to reference those templates
+
+You can disable this in the push dialog if you want INLINE content instead.
+
+## Managing templates
+
+WP Admin → **SiteZen → Templates**
+
+You'll see a list of all templates with:
+- Title
+- Type (Header / Footer / Tab / etc.)
+- Created date
+- Used in (count of places referencing it)
+
+Click any template to:
+- **Edit its content** (full Gutenberg editor)
+- **Preview** how it looks
+- **Duplicate** for variants (e.g. "Header v2 — dark mode")
+- **Delete** (warns if referenced anywhere)
+
+[SCREENSHOT: WP Admin Templates list]
+
+## Editing a template
+
+Templates open in the same Gutenberg editor as pages. The SiteZen Section block, all interactive blocks, and per-element editing all work identically.
+
+Save the template → **all instances referencing it update instantly** (no per-page edits needed).
+
+## Using a template in multiple places
+
+### From a Tabs block
+1. WP editor → click the tabs section
+2. Per-tab in sidebar → **Replace with template** → pick the template
+
+### From a Header / Footer
+1. WP Admin → Appearance → Header (or Customize → Header)
+2. **Header source** → SiteZen Template → pick which template
+
+### From a CPT detail page
+1. WP Admin → SiteZen → Post Types → your CPT → **Single Template** → pick
+
+## Why templates beat copy-pasting
+
+| Problem with copy-paste | Template solution |
+|---|---|
+| Edit header on 10 pages individually | Edit one template, 10 pages update |
+| Forget to update a page → inconsistency | Single source of truth |
+| Adds time per push (re-convert) | Reference existing template instantly |
+| Bloats database with duplicate content | One row, many references |
+
+## Template best practices
+
+1. **Use clear names.** "Main Header" not "Untitled Template 47". Templates list grows fast.
+2. **Group by type.** Use prefixes: "Header — Light", "Header — Dark", "Tab — Pricing FAQ Q1".
+3. **Duplicate before major changes.** Want to A/B test a new header? Duplicate the existing one, edit the copy, switch which is active.
+4. **Delete unused templates.** Clean up periodically — WP Admin → Templates → filter "Used in: 0" → delete.
+5. **Test before applying site-wide.** Preview a header template change on one page first, then make it the active site header.
+
+## Template vs INLINE — when to choose which
+
+| Pick TEMPLATE when... | Pick INLINE when... |
+|---|---|
+| Content reused 2+ places | One-off content unique to this page |
+| Content edited often by non-designer | Content set once and rarely touched |
+| Need consistency across pages | Need each instance to differ slightly |
+| Have a content team separate from designers | Solo workflow, no handoff needed |
+
+## Common issues
+
+**Template doesn't appear in the picker dropdown**
+- Template type mismatch — a "Tab" template won't appear in a "Header" picker
+- Template hasn't been published — WP Admin → Templates → confirm status is "Published" not "Draft"
+
+**Editing a template doesn't update pages**
+- Page cache — clear any page caching plugin
+- Browser cache — hard refresh
+- The template wasn't saved — check Templates list for the "Last modified" timestamp
+
+**Can't delete a template ("In use")**
+SiteZen prevents deleting templates that are referenced. Either:
+- Edit each page using it → switch to a different template OR change to INLINE → save
+- Then delete
+
+**Template auto-created has weird name**
+The auto-create flow uses `<Section Name> — Tab N` as title. To rename: WP Admin → Templates → click template → edit title → save.
+
+## What's next
+
+<Columns cols="3">
+  <Card title="Header / Footer" href="/templates/header-footer" icon="layout" horizontal="false">
+    Detailed guide for site-wide header and footer templates.
+  </Card>
+
+  <Card title="Tab Templates" href="/templates/tab-templates" icon="columns" horizontal="false">
+    Per-tab content reusability.
+  </Card>
+
+  <Card title="CPT Single Template" href="/templates/cpt-single" icon="file-text" horizontal="false">
+    Design detail pages for custom post types.
+  </Card>
+</Columns>

@@ -1,0 +1,170 @@
+---
+title: Post Listings (Dynamic CPT Cards)
+description: Turn static card grids into live WordPress posts that auto-update.
+---
+
+## What it does
+
+Post Listings turn a **static card grid in your Figma design** into a **dynamic WordPress query** that pulls real posts from a custom post type.
+
+So instead of hard-coding 6 team member cards, you create a "Team Members" CPT, add team members to it, and the cards automatically populate from those posts. Add a new team member in WordPress → it appears on the page instantly.
+
+## When to use it
+
+- **Team / staff pages** — list team members from a "Team" CPT
+- **Case studies / portfolio** — pull from a "Projects" CPT
+- **Blog post grids** — display recent articles
+- **Testimonials** — pull from a "Testimonials" CPT
+- **Product catalogs** — pull from WooCommerce products or custom CPT
+- **Event listings** — pull from an "Events" CPT
+- **Board members, advisors, speakers** — any "list of similar things"
+
+## How it works
+
+### What you design in Figma
+A static card grid showing **example cards** with real-looking content. SiteZen treats your design as the **template** for each post.
+
+```
+[Card 1: John Doe, CEO]
+[Card 2: Jane Smith, CTO]
+[Card 3: Sam Lee, Designer]
+```
+
+### What SiteZen detects
+The repeating card structure. It generates:
+
+```html
+<div data-sz-post-listing data-sz-post-type="team" data-sz-count="6">
+  <article data-sz-card>
+    <img data-sz-post-field="image" src="placeholder.jpg" alt="">
+    <h3 data-sz-post-field="title">Sample Name</h3>
+    <p data-sz-post-field="excerpt">Sample title/role</p>
+  </article>
+  <!-- repeats per card -->
+</div>
+```
+
+### What happens on push
+The plugin:
+1. Auto-registers the "team" custom post type if it doesn't exist
+2. Creates one WordPress post per card in your design (using each card's text/image as starter content)
+3. Replaces the static cards in the saved HTML with a single placeholder: `<!-- sz-post-listing type="team" count="6" -->`
+
+### What happens on the frontend
+Plugin queries the CPT, clones your card template per post, fills in `data-sz-post-field="..."` elements with real post data, displays the dynamic listing.
+
+**Result:** the design looks identical to your Figma. But adding a new team member in WordPress now updates the page automatically.
+
+## Field mapping
+
+Each element in your card template can be mapped to a post field via `data-sz-post-field`:
+
+| `data-sz-post-field` value | WordPress post data |
+|---|---|
+| `title` | Post title |
+| `excerpt` | Post excerpt (or first paragraph if no excerpt) |
+| `content` | Full post content |
+| `image` | Featured image |
+| `url` | Post permalink |
+| `date` | Publish date |
+| `author` | Post author name |
+| `category` | Primary category |
+| `meta:<field>` | Custom field value (e.g. `meta:job_title`) |
+
+SiteZen auto-assigns these based on what looks like a title vs description vs image in your Figma design. You can re-map any field in the WP editor sidebar.
+
+## Managing the auto-created CPT
+
+After your first push with a post listing, a new menu item appears in WP Admin:
+
+**SiteZen → Post Types → Team Members** (or whatever your CPT slug is)
+
+Here you can:
+- Add new posts (which appear in your listing immediately)
+- Edit existing posts
+- Set featured images
+- Manage custom fields
+- Reorder posts (drag-and-drop)
+
+[SCREENSHOT: WP Admin sidebar showing custom post type added by SiteZen]
+
+## Configuring the listing
+
+In the WP editor, click the post listing section → sidebar shows:
+
+| Control | Effect |
+|---|---|
+| **Post type** | Which CPT to query (dropdown of available) |
+| **Count** | How many posts to show |
+| **Order by** | Date, title, menu_order, random |
+| **Order** | Ascending / descending |
+| **Filter by category** | Limit to a specific category/taxonomy |
+| **Filter by meta** | Limit to posts with specific custom field value |
+| **Show pagination** | "Load more" button or numeric pagination |
+| **Cache duration** | How long to cache query results (default: 1 hour) |
+
+[SCREENSHOT: Post listing settings sidebar]
+
+## Per-card link target
+
+By default, each card links to the post's permalink. To override:
+
+- Wrap the card's content in an `<a data-sz-card-link>` tag manually, OR
+- Use sidebar → Card Link → choose: post permalink / custom URL / no link
+
+## Renaming the CPT
+
+The CPT slug is set on first push (derived from your section name). To rename:
+
+1. WP Admin → SiteZen → **Post Types** → click the CPT
+2. **Settings** → **Slug** → change
+3. Save → all posts and the URL re-slug automatically
+
+## Filtering / categories
+
+To organize a CPT with categories (e.g. group team members by department):
+
+1. WP Admin → SiteZen → Post Types → your CPT → **Taxonomies** → **Add taxonomy**
+2. Name it (e.g. "Department")
+3. In post editor for each post, assign a category
+
+Then in the listing sidebar, **Filter by taxonomy** → pick which department to show.
+
+## Frontend behavior
+
+- **Server-rendered** — no client-side JS to query posts
+- **Cached** — query results cached for 1 hour by default
+- **SEO-friendly** — real `<article>` tags with proper headings
+- **Pagination** without page reloads (AJAX load-more)
+
+## Common issues
+
+**Listing shows no posts**
+The CPT has no posts yet. Go to WP Admin → SiteZen → Post Types → your CPT → add a post.
+
+**Wrong post type queried**
+First push assigned the wrong CPT name. Click the listing in WP editor → sidebar → change **Post type** to the correct one.
+
+**Featured images not showing**
+Posts don't have featured images set. Edit each post → set featured image. Or the field mapping is wrong — sidebar → check `image` field maps to "Featured Image".
+
+**"Load more" doesn't work**
+Plugin frontend.js missing or AJAX is blocked. Check console for errors. Often a security plugin blocking AJAX endpoints.
+
+**Cards look wrong after a post added**
+The new post has different content length than the template assumed. Adjust card padding/min-height so cards stay consistent regardless of content length.
+
+**Listing duplicates content**
+The original static cards weren't fully replaced. Edit the page, find the listing section in the editor, delete any leftover non-dynamic cards.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Templates Overview" href="/templates/overview" icon="copy" horizontal="false">
+    Save single-post templates for CPT detail pages.
+  </Card>
+
+  <Card title="CPT Single Templates" href="/templates/cpt-single" icon="file-text" horizontal="false">
+    Design what a single post page looks like when clicked.
+  </Card>
+</Columns>

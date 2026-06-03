@@ -1,0 +1,186 @@
+---
+title: Maps & Video Backgrounds
+description: Google Maps embeds and video backgrounds — no manual embed code needed.
+---
+
+## What it does
+
+Two visual block types covered here:
+
+1. **Google Maps embed** — interactive map showing a location with marker
+2. **Video background** — fullscreen video looping behind text/CTA content
+
+Both auto-detected from your Figma design and made interactive on push.
+
+## Google Maps
+
+### How it's detected from Figma
+
+Design a **map-like rectangle** with:
+- A location pin / marker icon
+- Optional address text overlay
+- Map-style background (or a Figma placeholder image)
+
+SiteZen detects the intent and generates:
+
+```html
+<div class="sz-map"
+     data-sz-map-address="123 Main St, City, State"
+     data-sz-map-zoom="14"
+     data-sz-map-height="380">
+  <iframe src="https://www.google.com/maps?q=..." ...></iframe>
+</div>
+```
+
+The plugin renders an iframe loading Google Maps with your address centered.
+
+[SCREENSHOT: Map block in WordPress editor and on frontend]
+
+### Editing the map
+
+Click the map in WP editor → sidebar shows:
+
+| Control | Effect |
+|---|---|
+| **Address** | Where the pin is centered |
+| **Zoom level** | 1 (world view) to 20 (street level) |
+| **Height** | Map height in pixels |
+| **Style** | Default / Satellite / Terrain |
+| **Show controls** | Zoom buttons, fullscreen, street view |
+| **Show pin** | Marker on the address |
+
+### Adding a Google Maps API key (optional)
+
+By default, SiteZen uses the public embed URL (no API key needed, basic functionality).
+
+For advanced features (custom styling, multiple markers, etc.):
+
+1. Get a Google Maps API key from [console.cloud.google.com](https://console.cloud.google.com)
+2. WP Admin → SiteZen → **Modules → Integrations** → Google Maps → paste key
+3. Maps now use the JavaScript API with full styling support
+
+### Custom map styles
+
+With an API key, you can apply custom map styles:
+
+1. Generate a style at [snazzymaps.com](https://snazzymaps.com) or in Google's style editor
+2. Copy the JSON style array
+3. WP editor → map sidebar → **Custom style** → paste JSON
+
+### Multiple markers
+
+To show multiple locations on one map:
+
+1. Map sidebar → **Markers** → **Add marker**
+2. Enter address, optional label, optional icon
+3. Repeat for each marker
+
+The map auto-fits its bounds to include all markers.
+
+### Common map issues
+
+**Map shows "For development purposes only" watermark**
+You're using the JavaScript API without a billing-enabled API key. Either:
+- Enable billing on your Google Cloud project (free tier covers most use), or
+- Disable the API key in SiteZen settings to fall back to the no-key embed (works but less customizable)
+
+**Wrong location shown**
+Address auto-resolution failed. Use a more specific address (include city + state/country).
+
+**Map doesn't load on the live page**
+- API key restricted to wrong domain — check Google Cloud Console → API key → "Application restrictions" includes your site URL
+- Caching plugin is breaking the iframe — exclude `/wp-content/plugins/sitezen-plugin/` from caching
+
+---
+
+## Video Backgrounds
+
+### How it's detected from Figma
+
+Design a **section with a video play icon** or use a video frame as the background. Include a video URL in Figma's prototype settings or as a text annotation.
+
+SiteZen generates:
+
+```html
+<div class="sz-bg-video" data-sz-video-url="https://youtube.com/watch?v=ID">
+  <!-- plugin auto-injects the right iframe (YouTube/Vimeo/MP4) -->
+</div>
+```
+
+### Supported video sources
+
+| Source | URL format | What's used |
+|---|---|---|
+| **YouTube** | `youtube.com/watch?v=ID` or `youtu.be/ID` | Embedded iframe, muted, loop |
+| **Vimeo** | `vimeo.com/ID` | Embedded iframe, muted, loop |
+| **Self-hosted MP4** | `https://yoursite.com/video.mp4` | Native `<video>` tag, muted, loop, autoplay |
+| **Cloudinary / Bunny / etc.** | Direct video URL | Native `<video>` tag |
+
+### Editing video background
+
+Click the section → sidebar shows:
+
+| Control | Effect |
+|---|---|
+| **Video URL** | Source URL |
+| **Autoplay** | Start automatically (default: on) |
+| **Loop** | Restart when done (default: on) |
+| **Muted** | Required for autoplay on most browsers (default: on) |
+| **Overlay color** | Semi-transparent overlay over the video |
+| **Overlay opacity** | 0-100% |
+| **Mobile fallback image** | Static image on mobile (saves bandwidth) |
+| **Show controls** | Player controls visible (off by default for backgrounds) |
+
+[SCREENSHOT: Video background block with overlay settings]
+
+### Mobile considerations
+
+Mobile devices **block autoplay video** without user interaction, and consume mobile data quickly. By default:
+
+- Video does NOT autoplay on mobile
+- A static **fallback image** displays instead
+- Tapping the image starts the video
+
+To override and force video on mobile (not recommended):
+- Sidebar → toggle off **Mobile fallback**
+
+### Performance
+
+Video backgrounds are bandwidth-heavy. SiteZen mitigates by:
+
+- **Lazy loading** — video only loads when scrolled into view
+- **Compressed iframes** for YouTube/Vimeo
+- **Connection-aware** — on slow connections (2G/3G), shows fallback image automatically
+- **Preconnect hints** to YouTube/Vimeo domains in `<head>` for faster first frame
+
+### Common video issues
+
+**Video doesn't autoplay**
+Browser blocks autoplay without muted. Ensure **Muted** is on. Or autoplay is OS-restricted (battery saver mode).
+
+**Video shows controls (not a clean background)**
+For YouTube/Vimeo, **Show controls** must be off in sidebar. For self-hosted MP4, the `controls` attribute leaks through — sidebar → toggle controls off.
+
+**Video loads but is blurry / pixelated**
+- YouTube/Vimeo: source video is low resolution
+- Self-hosted: upload a higher bitrate version
+
+**Mobile fallback image not showing**
+You didn't upload one. Sidebar → **Mobile fallback image** → upload.
+
+**Video covers text/CTA awkwardly on mobile**
+Mobile typically can't display full background video well. Use the fallback image for mobile, keep video for desktop only.
+
+---
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Section Block" href="/blocks/section-block" icon="layout" horizontal="false">
+    Background videos live inside a SiteZen Section.
+  </Card>
+
+  <Card title="Performance Module" href="/modules/performance" icon="zap" horizontal="false">
+    Optimize map and video loading for faster pages.
+  </Card>
+</Columns>

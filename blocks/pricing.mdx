@@ -1,0 +1,131 @@
+---
+title: Pricing Block
+description: Pricing tables with feature lists, plan comparison, and popular-plan highlighting.
+---
+
+## What it does
+
+The Pricing block displays plan/tier comparison cards side by side. Each card shows a plan name, price, feature list, and CTA button. One card can be visually highlighted as "Most Popular".
+
+SiteZen auto-detects pricing sections in Figma when you have:
+- 2-4 side-by-side cards with similar structure
+- A price prominently displayed (with currency symbol)
+- A feature list (usually with checkmarks)
+- A CTA button per card
+
+## When to use it
+
+- SaaS pricing pages (Starter / Pro / Enterprise)
+- Service tier comparisons
+- Subscription plan offerings
+- Course or membership pricing
+
+## How pricing is created from Figma
+
+Design as:
+- **Horizontal row** of 2-4 cards (one per plan)
+- **Plan name** at the top of each card
+- **Price** prominently displayed (e.g. `$29` with `/month` subscript)
+- **Feature list** below price (bullet points with optional checkmark icons)
+- **CTA button** at the bottom
+- **Popular badge** (optional) on the featured plan — design it as a banner or pill
+
+SiteZen generates:
+- `<div class="sz-pricing">` wrapper
+- `<div class="sz-pricing-card">` per plan
+- `<div class="sz-price">` for the price display
+- `<ul>` for the feature list
+- `.sz-popular` class on the highlighted card
+
+[SCREENSHOT: Figma pricing design vs. WordPress editor result]
+
+## Editing pricing content
+
+**Change a price:**
+1. Click the price text in the editor
+2. Sidebar shows the price value + formatting controls
+3. Edit (e.g. `$29` → `$39`)
+
+**Change a feature list item:**
+1. Click the bullet text
+2. Edit inline
+
+**Add a new feature row:**
+1. Click an existing feature → ⋮ menu → Duplicate
+2. Edit the new row's text
+
+**Change which plan is "Most Popular":**
+1. Click the currently-popular card → sidebar → uncheck **Mark as popular**
+2. Click the card you want featured → sidebar → check **Mark as popular**
+
+## Per-card controls
+
+| Control | Effect |
+|---|---|
+| **Plan name** | Card title |
+| **Price** | Headline number |
+| **Price period** | Subscript (e.g. /month, /year) |
+| **Features** | Bullet list |
+| **CTA button text** | Button label |
+| **CTA button URL** | Where the button links |
+| **Mark as popular** | Highlights with accent border + badge |
+| **Background override** | Per-card bg color (overrides Figma) |
+
+[SCREENSHOT: Pricing card controls panel]
+
+## Toggle annual / monthly pricing
+
+A common UX pattern is a toggle that swaps prices between monthly and annual:
+
+Currently SiteZen does NOT auto-detect annual/monthly toggles. To implement:
+
+1. Design BOTH price values in Figma (one per state)
+2. After conversion, manually wire the toggle using custom code via the [Fallback custom-code](/advanced/fallback-html) block
+
+A no-code toggle is on the roadmap.
+
+## Plan ordering
+
+Plans display left-to-right in the order they appear in your Figma design (top-to-bottom in the layers panel).
+
+To reorder in WordPress:
+1. Click a plan card
+2. Use **Move Left** / **Move Right** arrows in the block toolbar
+
+## Frontend behavior
+
+- **Responsive grid** — cards stack vertically on mobile
+- **Popular card** scales up slightly + accent border + badge
+- **CTA buttons** styled consistently across all cards (popular CTA gets accent color)
+- **No JavaScript needed** — pure CSS, fast loads
+
+## Common issues
+
+**"Most Popular" badge not showing**
+The `.sz-popular` class wasn't added to any card. Click the card you want featured → sidebar → check **Mark as popular**.
+
+**Cards have different heights**
+Feature lists differ in length. Either:
+- Add filler items (✓ included) to shorter lists
+- Or toggle "Equal heights" in sidebar (cards match the tallest)
+
+**Price formatting looks broken on mobile**
+Long prices (e.g. `$1,299/year`) wrap awkwardly. Use a smaller font size for price OR shorten the period suffix (e.g. `/yr` instead of `/year`).
+
+**Currency symbol is wrong**
+SiteZen uses whatever symbol your Figma file has. To change, click the price → edit in the sidebar.
+
+**Feature checkmarks missing**
+Checkmark icons are read from your Figma design. If your design used image icons, they may not have been extracted. Add them manually via the sidebar's "Icon" picker per row.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Section Block" href="/blocks/section-block" icon="layout" horizontal="false">
+    The container that holds your pricing cards.
+  </Card>
+
+  <Card title="Fallback Custom HTML" href="/advanced/fallback-html" icon="code" horizontal="false">
+    For unique pricing patterns SiteZen doesn't auto-handle.
+  </Card>
+</Columns>

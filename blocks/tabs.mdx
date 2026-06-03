@@ -1,0 +1,143 @@
+---
+title: Tabs Block
+description: Interactive tabbed content with per-tab template support and full editor preview.
+---
+
+## What it does
+
+The Tabs block lets visitors switch between multiple content panels using clickable tabs. Common use cases: product feature tabs, FAQ categories, multi-step guides, industry breakdowns.
+
+SiteZen auto-detects tabs in your Figma design (any row of label-like buttons above stacked content) and converts them into a fully working Tabs block — clickable in both the WordPress editor preview AND the live frontend.
+
+## When to use it
+
+- Multi-category content (industries, use cases, features)
+- Saving vertical space when 3-7 related sections share visual structure
+- Comparison tables (Plan A / Plan B / Plan C)
+- Step-by-step processes where you want non-linear navigation
+
+For 2 simple choices, prefer two columns or a toggle. For 8+ tabs, prefer an accordion.
+
+## How tabs are created from Figma
+
+In Figma, design tabs as:
+- A **horizontal row of buttons** (the tab labels) at the top
+- **Stacked content frames** below — one frame per tab's content
+- The active tab visually distinguished (different bg color, underline, etc.)
+
+SiteZen reads your design and:
+1. Creates a `<section class="sz-has-tabs">` wrapper
+2. Generates `<button class="sz-tab-btn">` for each label
+3. Creates `<div class="sz-tab-panel">` for each content frame
+4. Wires the active tab to be visible, others hidden
+
+[SCREENSHOT: Figma tabs design vs. WordPress editor result]
+
+## Two modes: INLINE vs TEMPLATE
+
+Each tab's content can live in one of two places:
+
+### INLINE mode (default for fresh conversions)
+The tab's content is stored **inside the SiteZen Section block** itself. Editing it = editing the block.
+
+**Best for:** one-off content unique to this section, tabs you'll never reuse elsewhere.
+
+### TEMPLATE mode (recommended for reusable content)
+The tab's content lives in a separate **SiteZen Template** post (a custom post type). The block just references the template by ID.
+
+**Best for:**
+- Content reused across multiple sections (e.g. same "Pricing comparison" tab content on 3 pages)
+- Content edited frequently — you edit once in the template, all instances update
+- Designer-developer handoff — designer edits sections, content team edits templates
+
+[SCREENSHOT: Editor sidebar showing INLINE vs TEMPLATE badge per tab]
+
+## Switching a tab between INLINE and TEMPLATE
+
+In the WordPress editor:
+
+<Steps>
+  <Step title="Click the tabs section" icon="cursor" title-type="p">
+    Right sidebar updates to show per-tab controls.
+  </Step>
+
+  <Step title="Find the tab" icon="search" title-type="p">
+    Scroll to find "Tab 1", "Tab 2", etc. Each shows its current mode badge (INLINE / TEMPLATE).
+  </Step>
+
+  <Step title="Open the Replace dropdown" icon="chevron-down" title-type="p">
+    Click **— Replace with template —** under that tab.
+  </Step>
+
+  <Step title="Pick a template" icon="check" title-type="p">
+    Select an existing SiteZen Template, OR click "Create new template" to spin one up with the current inline content as starter.
+  </Step>
+</Steps>
+
+The tab now uses TEMPLATE mode and references that template post.
+
+[SCREENSHOT: Tab template picker dropdown open]
+
+## Auto-template creation on push
+
+When you push a section with tabs to WordPress, SiteZen can **automatically create a template per tab**:
+
+1. Engine emits tab content inline
+2. Push API extracts each tab's content
+3. Creates one `sz_template` post per tab (titled e.g. "Industry Tabs — Tab 1")
+4. Section panels become empty placeholders bound to those templates
+
+Result: tabs land in TEMPLATE mode by default, ready to edit centrally.
+
+This behavior is on by default. Disable per-push by un-checking "Auto-create templates" in the push dialog if you want tabs to stay INLINE.
+
+## Frontend behavior
+
+Tabs work without any JavaScript setup from you:
+
+- Click a tab button → that panel shows, others hide
+- Active tab gets `.active` class for styling
+- Hidden panels use the `hidden` attribute (true display:none)
+- Keyboard accessible (Tab key navigates, Enter/Space activates)
+- Works in both the WordPress block editor preview AND on the live site
+
+## Adding / removing tabs
+
+Currently, the number of tabs is determined by your Figma source. To change:
+
+- **Add a tab**: edit your Figma file → add another tab row + content frame → re-run the conversion
+- **Remove a tab**: in WP editor, click the tab section → in the sidebar, find the tab → click ⋯ → Remove
+
+Inline tabs can also be edited directly by clicking inside the panel's content. Template tabs require editing the linked template post.
+
+## Common issues
+
+**Tabs don't switch when clicked**
+Most common cause: the tab class is wrong (`sz-sz-tab-panel` instead of `sz-tab-panel` — duplicated prefix). Re-run the conversion; latest engine version auto-corrects this. If still happening, contact support with the page URL.
+
+**All tab panels show at once (no hiding)**
+The first panel is missing the active state, OR all panels have `hidden`. Click the tabs in the editor → check sidebar → tab 1 should NOT have `hidden`.
+
+**TEMPLATE mode shows "No template selected"**
+You set the tab to template mode but didn't pick a template. Click the dropdown → choose one, or click "Create new template" to make a fresh one.
+
+**Editor preview switches tabs but live site doesn't**
+The plugin's frontend.js isn't loading on the live page. Common causes:
+- Page caching plugin (clear cache)
+- Another plugin removed sitezen-frontend script (deactivate one-by-one to find conflict)
+- View page source → search for `sitezen-plugin/assets/js/frontend.js` — if missing, the script isn't enqueued
+
+**Tab content shows the wrong text**
+The Figma file had different text than what's rendered. This happens if you converted from an outdated cached version. Re-run the conversion with the current Figma file.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Templates Overview" href="/templates/overview" icon="copy" horizontal="false">
+    How templates work and when to use them.
+  </Card>
+
+  <Card title="Accordion Block" href="/blocks/accordion" icon="chevrons-down" horizontal="false">
+    Similar UX for 8+ items where tabs would be cramped.
+  </Card>
+</Columns>

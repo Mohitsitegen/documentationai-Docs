@@ -1,0 +1,131 @@
+---
+title: Accordion Block
+description: Expandable / collapsible content panels — great for FAQs and long content lists.
+---
+
+## What it does
+
+The Accordion block displays a stack of expandable rows. Each row has a clickable header; clicking it expands the panel below to reveal hidden content. Click again to collapse.
+
+SiteZen auto-detects accordions in Figma (any vertical list of header-rows with body content below each) and converts them into a working accordion block.
+
+## When to use it
+
+- **FAQ sections** (most common use case)
+- Long content lists where users only need 1-2 items at a time
+- Step-by-step guides where each step has detailed content
+- Feature lists with hideable details
+- 8+ items where tabs would be too cramped
+
+For 2-7 items with visual content, prefer [tabs](/blocks/tabs).
+
+## How accordions are created from Figma
+
+In Figma, design accordions as:
+- **Vertical stack of rows** — each row is one accordion item
+- **Header** at the top of each row (label, icon, +/- toggle)
+- **Body content** below the header (initially hidden, but show it expanded in your design so SiteZen can read it)
+
+SiteZen generates:
+- `<div class="sz-accordion">` wrapper
+- One `<div class="sz-accordion-item">` per row
+- `<button class="sz-accordion-trigger">` for the clickable header
+- `<div class="sz-accordion-body">` for the expandable content
+
+[SCREENSHOT: Figma accordion design vs. WordPress editor result]
+
+## Default open state
+
+The first accordion item is **open by default**. All other items start collapsed.
+
+To change which item is open by default:
+1. WordPress editor → click the accordion section
+2. Sidebar → find the item you want open
+3. Toggle **Open by default**
+
+To start with all items collapsed: toggle off "Open by default" on the first item too.
+
+## Linked-panel variant (advanced)
+
+Some designs pair an accordion with a synced visual panel — clicking an accordion item updates an image or sub-section on the right.
+
+SiteZen supports this via `data-sz-panel` attributes:
+
+```
+<div class="sz-accordion-item" data-sz-panel="feature-1">
+  <button>Feature 1</button>
+  <div class="sz-accordion-body">...</div>
+</div>
+...
+<img data-sz-panel-key="feature-1" src="..." class="is-active">
+<img data-sz-panel-key="feature-2" src="...">
+```
+
+When the user clicks "Feature 1", the matching `data-sz-panel-key="feature-1"` image gets `.is-active` (others lose it).
+
+The plugin handles this automatically — no JS setup needed.
+
+## Editing accordion content
+
+**Editing item headers:**
+1. WordPress editor → click the accordion header text
+2. Sidebar shows text + typography controls
+3. Edit and save
+
+**Editing item body content:**
+1. Click into the body content (text, images, buttons inside the panel)
+2. Sidebar shows per-element controls
+3. Edit normally
+
+**Adding / removing items:**
+- Add: click the ⋮ menu on an item → Duplicate (creates a copy below)
+- Remove: click the ⋮ menu → Delete
+
+## Styling controls
+
+Per-accordion-section, you can control:
+
+| Control | Effect |
+|---|---|
+| **Item spacing** | Gap between items |
+| **Border style** | None / bottom-line / full-border / card-style |
+| **Icon position** | Left of header / right of header / none |
+| **Open icon** | What displays when item is open (+ / − / chevron) |
+| **Multi-open** | Allow multiple items open at once (vs only-one-at-a-time) |
+
+## Frontend behavior
+
+- Click a header → that item opens, others close (unless **multi-open** is on)
+- Click an open item's header again → it closes
+- Smooth height animation by default
+- Keyboard accessible (Tab to focus, Enter/Space to toggle)
+- Open state syncs with `aria-expanded` for screen readers
+
+## Common issues
+
+**Accordion items don't expand on click**
+Plugin's frontend.js isn't loading. Check page source for `sitezen-plugin/assets/js/frontend.js`. If missing, clear caches and check for plugin conflicts.
+
+**All items open at once on page load**
+The accordion CSS isn't loading. Confirm `wp-content/uploads/sitezen-css/<hash>.css` exists. If not, edit and re-save the page to regenerate the CSS file.
+
+**Linked panel images don't switch when accordion clicked**
+The `data-sz-panel-key` on the images doesn't match the `data-sz-panel` on the items. Check the HTML — both attributes must use the same string (e.g. both "feature-1").
+
+**Body content shows raw HTML in the editor preview**
+The body content has invalid HTML that the WP editor can't parse. Click the item → check sidebar for any error indicator. Worst case, delete the item and re-add via Duplicate.
+
+**Animations are choppy or instant**
+CSS transitions were stripped by an optimization plugin. Add `.sz-accordion-body { transition: max-height 0.3s ease-out; }` to your theme's custom CSS.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Tabs Block" href="/blocks/tabs" icon="columns" horizontal="false">
+    Similar UX for 2-7 items with horizontal navigation.
+  </Card>
+
+  <Card title="Templates Overview" href="/templates/overview" icon="copy" horizontal="false">
+    Save accordion body content as reusable templates.
+  </Card>
+</Columns>

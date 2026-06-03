@@ -1,0 +1,142 @@
+---
+title: Slider Block
+description: Horizontal carousels for testimonials, logos, product cards, and image galleries.
+---
+
+## What it does
+
+The Slider block creates a horizontal scrolling carousel of slides. Visitors swipe (mobile) or click prev/next arrows (desktop) to move through items.
+
+SiteZen auto-detects sliders in Figma when you have:
+- A horizontal row of repeating cards (3+ similar items)
+- Optional prev/next arrows
+- Optional dot navigation
+
+## When to use it
+
+- **Testimonials** (one quote per slide)
+- **Logo carousels** (continuous-scroll marquee variant)
+- **Product showcases** where you have 6+ items
+- **Image galleries** with captions
+- **Multi-card sliders** (3-4 cards visible at once, paginated)
+
+For 2-3 items, prefer a static column layout. For 100+ items, prefer a filterable grid.
+
+## Slider variants supported
+
+### 1. One-at-a-time slider
+Full-width slide. One slide visible at a time. Typical for testimonials.
+
+```
+[← Slide 1 →]
+```
+
+### 2. Multi-card slider
+Multiple cards visible. Paginated forward/back by 1 card or 1 page at a time.
+
+```
+[Card 1 | Card 2 | Card 3] →
+```
+
+### 3. Center slider
+Centered active slide, partial preview of adjacent slides. Gives "peek" of what's next.
+
+```
+[half Card 0 | Card 1 (full) | half Card 2]
+```
+
+### 4. Logo marquee
+Continuous horizontal scroll, no controls. Logos slide past forever.
+
+```
+[Logo Logo Logo Logo Logo Logo ...] →
+```
+
+SiteZen picks the variant automatically based on your Figma design.
+
+[SCREENSHOT: Examples of all 4 slider variants]
+
+## How sliders are created from Figma
+
+Design your slider as:
+- **A row of cards or slides** (the visible items)
+- **Same height for all slides** so they don't jump
+- **Prev/Next buttons** (optional) — design them as Figma elements at the slider edges
+- **Dot pagination** (optional) — design dots below the slider
+
+SiteZen generates:
+- `<div class="sz-slider">` wrapper
+- `<div class="sz-slider-track">` for the scrolling container
+- `<div class="sz-slide">` for each slide
+- `<button class="sz-prev">` and `<button class="sz-next">` for arrows
+- `<div class="dots">` with `<button class="sz-dot">` for pagination
+
+## Configuring slider behavior
+
+In the WordPress editor, click the slider section → sidebar shows:
+
+| Control | Effect |
+|---|---|
+| **Slides per view (desktop)** | How many slides visible at once on desktop |
+| **Slides per view (tablet)** | Tablet override |
+| **Slides per view (mobile)** | Mobile override (usually 1) |
+| **Autoplay** | Auto-advance every X seconds |
+| **Autoplay delay** | Seconds between auto-advances |
+| **Loop** | Wrap around to slide 1 after last slide |
+| **Pause on hover** | Stop autoplay when user hovers |
+| **Show arrows** | Toggle prev/next visibility |
+| **Show dots** | Toggle dot navigation visibility |
+
+[SCREENSHOT: Slider settings sidebar]
+
+## Adding / removing slides
+
+**Add a slide:**
+1. Click an existing slide → ⋮ menu → **Duplicate**
+2. Edit the new slide's content
+
+**Remove a slide:**
+1. Click the slide → ⋮ menu → **Remove**
+
+**Reorder slides:**
+1. Click a slide → use **Move Up** / **Move Down** arrows in the block toolbar
+
+## Frontend behavior
+
+- **Touch swipe** on mobile (built-in, no setup)
+- **Click + drag** on desktop
+- **Keyboard navigation** — Left/Right arrows when slider is focused
+- **Lazy loading** — images in non-active slides load only when scrolled into view
+- **Smooth CSS transforms** — no janky JavaScript animations
+
+## Common issues
+
+**Slider loads but doesn't scroll**
+Plugin frontend.js missing. Check page source for `sitezen-plugin/assets/js/frontend.js`. Clear caches.
+
+**Slides stacked vertically instead of horizontal**
+The slider CSS isn't loading. Check that `wp-content/uploads/sitezen-css/<hash>.css` exists for this page. Re-save the page to regenerate.
+
+**Arrows / dots not visible**
+Toggled off in settings. Click slider → sidebar → enable "Show arrows" and "Show dots".
+
+**Autoplay doesn't start**
+Toggle Autoplay off and back on, save the page, refresh. If still not working, check for plugin conflicts (animation/effects plugins).
+
+**Slide images don't load**
+Lazy loading is too aggressive on slow connections. Disable lazy loading via sidebar → "Lazy load images: off".
+
+**Logo marquee scrolls then stops**
+The marquee CSS animation was killed by an optimization plugin (Autoptimize, WP Rocket). Whitelist the SiteZen CSS file in your optimization plugin's exclusions.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Section Block" href="/blocks/section-block" icon="layout" horizontal="false">
+    The container that holds your slider.
+  </Card>
+
+  <Card title="Performance Module" href="/modules/performance" icon="zap" horizontal="false">
+    Optimize slider images and CSS for faster loads.
+  </Card>
+</Columns>

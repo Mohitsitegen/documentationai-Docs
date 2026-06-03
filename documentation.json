@@ -56,14 +56,66 @@
             ]
           },
           {
-            "group": "Block Features (coming next)",
+            "group": "Block Features",
             "icon": "layers",
-            "pages": []
+            "pages": [
+              {
+                "title": "SiteZen Section Block",
+                "path": "blocks/section-block",
+                "icon": "square"
+              },
+              {
+                "title": "Tabs",
+                "path": "blocks/tabs",
+                "icon": "columns"
+              },
+              {
+                "title": "Accordion",
+                "path": "blocks/accordion",
+                "icon": "chevrons-down"
+              },
+              {
+                "title": "Slider",
+                "path": "blocks/slider",
+                "icon": "image"
+              },
+              {
+                "title": "Pricing",
+                "path": "blocks/pricing",
+                "icon": "tag"
+              },
+              {
+                "title": "Stats & Counter",
+                "path": "blocks/stats-counter",
+                "icon": "bar-chart"
+              },
+              {
+                "title": "Forms",
+                "path": "blocks/forms",
+                "icon": "edit"
+              },
+              {
+                "title": "Post Listings (Dynamic CPTs)",
+                "path": "blocks/post-listings",
+                "icon": "database"
+              },
+              {
+                "title": "Maps & Video Backgrounds",
+                "path": "blocks/maps-video",
+                "icon": "map-pin"
+              }
+            ]
           },
           {
-            "group": "Templates (coming next)",
+            "group": "Templates",
             "icon": "copy",
-            "pages": []
+            "pages": [
+              {
+                "title": "Templates Overview",
+                "path": "templates/overview",
+                "icon": "copy"
+              }
+            ]
           },
           {
             "group": "Advanced (coming next)",

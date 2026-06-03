@@ -1,0 +1,134 @@
+---
+title: Stats & Counter Block
+description: Animated number counters for displaying metrics, achievements, and key statistics.
+---
+
+## What it does
+
+The Stats block displays large numbers that **animate from 0 up to the target value** when scrolled into view. Pair each number with a short label (e.g. "Customers", "Countries", "Years").
+
+SiteZen auto-detects stats sections in Figma when you have:
+- 2-6 large numbers in a row
+- Small text labels under each number
+- Optional icons or visual accents
+
+## When to use it
+
+- **Hero metrics** ("10K+ customers", "99.9% uptime")
+- **About page achievements** ("Since 2010", "100+ countries")
+- **Trust signals** ("$50M+ delivered", "4.9★ rating")
+- **Case study highlights** ("3x conversion", "60% cost reduction")
+
+## How stats are created from Figma
+
+Design as:
+- **Horizontal row** of stat blocks (2-6 items)
+- **Large number** at the top of each block (e.g. `86,700` or `99.9%`)
+- **Small label** below the number
+- Optional **icon** above the number
+- Optional **suffix** ($ K M + %)
+
+SiteZen generates:
+```
+<div class="sz-stats">
+  <div class="sz-stat">
+    <span class="sz-stat-num" data-target="86700">0</span>
+    <span class="sz-stat-label">Customers</span>
+  </div>
+  ...
+</div>
+```
+
+The `data-target` attribute holds the final value. JavaScript animates from 0 → target when the stat scrolls into view.
+
+[SCREENSHOT: Stats block with animation in progress]
+
+## Editing stat values
+
+**Change the number:**
+1. Click the number in the editor
+2. Sidebar shows `Target value` field (the final number it counts to)
+3. Edit (e.g. 86700 → 92500)
+4. Save — animation auto-uses the new target
+
+**Change the label:**
+1. Click the label text
+2. Edit inline
+
+**Change the format:**
+- Use the **Format** dropdown in the sidebar:
+  - `1234` (comma-separated, default)
+  - `1.2K` (compact thousands)
+  - `1.2M` (compact millions)
+  - `99.9%` (percentage)
+  - `$1,234` (currency)
+
+## Animation settings
+
+Per-stat controls in the sidebar:
+
+| Control | Effect |
+|---|---|
+| **Duration** | How long the count animation takes (default 2 seconds) |
+| **Easing** | Animation curve (linear / ease-out / bouncy) |
+| **Trigger threshold** | What % of stat must be on-screen to start (default 30%) |
+| **Animate once** | Run animation once vs every scroll into view |
+| **Prefix** | Text/symbol before the number (e.g. `$`, `~`) |
+| **Suffix** | Text/symbol after (e.g. `+`, `K`, `%`) |
+
+## Static vs animated mode
+
+Sometimes you want stats without animation (e.g. tiny "as seen in" mentions, or for users with motion sensitivity).
+
+Toggle **Animate** off in the sidebar to display static numbers.
+
+Visitors with `prefers-reduced-motion: reduce` set in their OS will see static numbers automatically — no setup needed.
+
+## Adding / removing stats
+
+**Add a stat:**
+1. Click an existing stat → ⋮ menu → **Duplicate**
+2. Edit the new stat's target and label
+
+**Remove a stat:**
+1. Click the stat → ⋮ menu → **Remove**
+
+**Reorder stats:**
+1. Click a stat → **Move Left** / **Move Right** in block toolbar
+
+## Frontend behavior
+
+- Animation triggers via **Intersection Observer** — only when the stat scrolls into view
+- Smooth 60fps animation using `requestAnimationFrame`
+- Numbers format correctly during animation (commas appear progressively as you'd expect)
+- Pauses when tab is backgrounded (saves CPU)
+- Honors `prefers-reduced-motion`
+
+## Common issues
+
+**Numbers don't animate**
+Plugin frontend.js missing or another plugin removed the script. Check page source for `sitezen-plugin/assets/js/frontend.js`.
+
+**Numbers animate but jump (not smooth)**
+Slow device or too many concurrent animations. Reduce duration to 1.5s or use simpler easing (`linear`).
+
+**Wrong final number shown**
+The `data-target` attribute has a different value than the visible text. Click the number → check sidebar "Target value" matches what you want.
+
+**Decimal numbers show as integers (e.g. 4.9 → 5)**
+The format dropdown is set to integer format. Change to decimal format with appropriate precision.
+
+**Stats too wide on mobile (overflow)**
+Reduce font size on the stat-num via sidebar → Typography → Mobile font size. Or stack stats vertically on mobile with the layout control.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Section Block" href="/blocks/section-block" icon="layout" horizontal="false">
+    The container holding your stats row.
+  </Card>
+
+  <Card title="Performance" href="/modules/performance" icon="zap" horizontal="false">
+    How animations affect page performance.
+  </Card>
+</Columns>
