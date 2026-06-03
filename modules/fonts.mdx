@@ -1,0 +1,171 @@
+---
+title: Custom Fonts
+description: Self-host fonts for branding consistency and performance.
+---
+
+## What it does
+
+The Fonts module manages typography across your site:
+
+- **Auto-loads Google Fonts** used in your conversions
+- **Self-hosts** Google Fonts for privacy (GDPR-friendly) and speed
+- **Adds custom fonts** uploaded as .woff2 files
+- **Manages font weights and styles** so you only load what you use
+
+## When to use it
+
+### Default behavior — leave it alone
+Most sites just need the fonts SiteZen auto-detects from Figma conversions. No setup needed.
+
+### When to customize:
+- **Privacy**: GDPR requires you NOT load Google Fonts from Google's CDN (some EU sites)
+- **Performance**: self-hosted fonts can be 100-300ms faster than CDN
+- **Branding**: licensed custom font your designer specified
+- **Adobe Fonts (Typekit)**: licensed font that doesn't come from Google
+
+## Setting up self-hosted Google Fonts
+
+WP Admin → SiteZen → Modules → Fonts → **Self-host Google Fonts**
+
+<Steps>
+  <Step title="Toggle on Self-host" icon="server" title-type="p">
+    Plugin downloads all Google Fonts used on your site to `wp-content/uploads/sitezen-fonts/` and serves from there.
+  </Step>
+
+  <Step title="Confirm fonts list" icon="check" title-type="p">
+    The page shows which Google Fonts were detected and downloaded.
+  </Step>
+
+  <Step title="Test on the live site" icon="eye" title-type="p">
+    Visit any page → view source → font URLs should now point to your domain, not `fonts.googleapis.com`.
+  </Step>
+</Steps>
+
+[SCREENSHOT: Fonts module with self-host toggle and detected fonts list]
+
+## Uploading custom fonts
+
+For fonts not in Google Fonts (proprietary, licensed, etc.):
+
+<Steps>
+  <Step title="Get the font files" icon="download" title-type="p">
+    Need `.woff2` files. If you only have `.ttf` or `.otf`, convert at [transfonter.org](https://transfonter.org) first.
+  </Step>
+
+  <Step title="Upload to SiteZen" icon="upload" title-type="p">
+    WP Admin → SiteZen → Modules → Fonts → **Add Custom Font** → upload .woff2 files for each weight/style.
+  </Step>
+
+  <Step title="Set font family name" icon="type" title-type="p">
+    Give it a unique CSS name (e.g. "MyBrand Sans"). Use this name everywhere in your CSS.
+  </Step>
+
+  <Step title="Use in conversions" icon="check" title-type="p">
+    Your Figma file should already reference this font by name. SiteZen detects the name and uses your uploaded files instead of trying to load from Google.
+  </Step>
+</Steps>
+
+## Supported font formats
+
+| Format | Recommended? | Notes |
+|---|---|---|
+| `.woff2` | ✅ Yes | Best compression, supported by all modern browsers |
+| `.woff` | ⚠️ Fallback only | Older browser support |
+| `.ttf` | ❌ Avoid | Large file size, no compression |
+| `.otf` | ❌ Avoid | Same as TTF |
+| `.eot` | ❌ No | IE-only, deprecated |
+
+Convert anything to `.woff2` at [transfonter.org](https://transfonter.org) before uploading.
+
+## Configuring font weights / styles
+
+For each font, you can upload multiple weight/style combinations:
+
+| Weight | Style | Use case |
+|---|---|---|
+| 400 | normal | Body text (default) |
+| 400 | italic | Body italic |
+| 600 | normal | Subheadings, bold body |
+| 700 | normal | Headings |
+| 900 | normal | Hero headlines |
+
+**Only upload what your design actually uses.** Each font file = an HTTP request = page load delay. 4-5 weight/style combos is typical; 10+ is wasteful.
+
+## Font display strategies
+
+WP Admin → SiteZen → Modules → Fonts → **Display strategy**
+
+| Strategy | What users see | Trade-off |
+|---|---|---|
+| **swap** (default) | Fallback font first, custom font swaps in | No invisible text (good UX), slight layout shift |
+| **block** | Invisible text for up to 3s, then fallback | No layout shift, but blank text initially |
+| **fallback** | Brief invisible, then fallback if font slow | Compromise of the above |
+| **optional** | Use cached font; if not cached, use fallback | Best perf, inconsistent visual |
+
+**Recommended: swap.** Best UX trade-off for most use cases.
+
+## Adobe Fonts (Typekit)
+
+SiteZen supports Adobe Fonts via project ID:
+
+1. Create a project at [fonts.adobe.com](https://fonts.adobe.com) → add fonts
+2. Copy the project ID (looks like `abc1xyz`)
+3. WP Admin → SiteZen → Modules → Fonts → **Adobe Fonts** → paste project ID
+4. Save
+
+Plugin loads the Adobe Fonts CSS automatically on all pages.
+
+Note: Adobe Fonts cannot be self-hosted (licensing). They always load from Adobe's CDN.
+
+## Removing unused fonts
+
+Over time, your conversions may accumulate fonts you no longer use:
+
+1. Fonts module → **Detected fonts**
+2. See which fonts are loaded across your site
+3. For each unused font → click **Remove** → confirms it's not used anywhere → deletes
+
+Auto-cleanup runs monthly — orphaned fonts (loaded but not used) auto-pruned.
+
+## Font preview
+
+Click any font in the Fonts module to preview:
+- Sample text in all uploaded weights/styles
+- Load time on slow 3G
+- File sizes per weight
+- Browser support coverage
+
+[SCREENSHOT: Font preview with sample text]
+
+## Common issues
+
+**Custom font uploaded but not applying**
+- Font family name in your Figma/CSS doesn't match what you named it in SiteZen
+- Browser cache showing old font — hard refresh (Ctrl+Shift+R)
+- The font isn't referenced anywhere — check WP editor for the section using it
+
+**Self-hosted Google Fonts not working**
+- Wrong file permissions on `wp-content/uploads/sitezen-fonts/` (chmod 755)
+- Server blocking .woff2 MIME type (rare; add `AddType font/woff2 .woff2` to .htaccess)
+
+**Font flashes (FOIT) noticeably**
+Change Display strategy from "block" to "swap" — fallback shows immediately, custom font swaps when ready.
+
+**Adobe Fonts not loading**
+- Project ID wrong (re-copy from fonts.adobe.com)
+- Domain not whitelisted in Adobe project settings (add your site URL)
+
+**Page loading slow after adding fonts**
+Too many weights uploaded. Each weight = separate HTTP request. Reduce to only what's used (typically 3-4 max).
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Performance & SEO" href="/modules/performance-seo" icon="zap" horizontal="false">
+    Other speed optimizations beyond fonts.
+  </Card>
+
+  <Card title="Section Block" href="/blocks/section-block" icon="layout" horizontal="false">
+    How fonts apply per-section in WordPress.
+  </Card>
+</Columns>

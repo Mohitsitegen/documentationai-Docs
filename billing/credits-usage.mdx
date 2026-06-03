@@ -1,0 +1,196 @@
+---
+title: Credits & Usage Dashboard
+description: Track section usage, see per-conversion cost, monitor your monthly cap.
+---
+
+## What it does
+
+The Credits & Usage dashboard shows:
+
+- **Current month's section usage** vs your plan cap
+- **Per-conversion breakdown** with token counts
+- **Rollover credits** from previous months
+- **Projected cap** for the month based on usage rate
+- **Cost breakdown** for billing reconciliation
+
+Useful for budgeting, client billing, and understanding what drives your costs.
+
+## Opening the dashboard
+
+Platform → left sidebar → **Settings** → **Usage** tab.
+
+[SCREENSHOT: Usage dashboard with charts and stats]
+
+## What you'll see
+
+### Top stats
+| Stat | Meaning |
+|---|---|
+| **Sections used this month** | Count + visual bar against your cap |
+| **Sections remaining** | Cap minus used (includes rollover) |
+| **Cap projection** | "At current rate, you'll hit cap on June 23" |
+| **Total spent** | $ cost of API usage this month (informational) |
+
+### Usage chart
+Line chart showing daily section usage for the current month. Identifies usage spikes.
+
+### Conversion log
+Table of every conversion this month:
+
+| Column | What it shows |
+|---|---|
+| Date/time | When the conversion ran |
+| Section name | What you named it |
+| Site | Which WordPress site it pushed to |
+| Tokens | Input + Output token count |
+| Sections charged | Usually 1, sometimes more for very large sections |
+| Status | ✅ Success / ❌ Failed |
+
+Click any row → opens the conversion in History view.
+
+## Understanding the math
+
+### What you're charged for
+Each successful conversion counts as **1 section** against your cap (in most cases).
+
+### When a conversion may count as MORE than 1 section
+
+Very rare, but possible if:
+- Single conversion uses >50,000 tokens (extremely long section)
+- Multiple retries within one Fix Issues session
+
+Each ~50K tokens = 1 section. So a 100K-token conversion = 2 sections.
+
+The dashboard shows exactly what was charged per row.
+
+### When a conversion counts as 0 sections
+- Engine error / timeout (our fault, not charged)
+- Failed before any API call (validation error)
+
+## Token counts explained
+
+Each conversion sends/receives multiple types of tokens:
+
+| Token type | Why it counts |
+|---|---|
+| **Input** | Your Figma data + screenshot sent to AI |
+| **Output** | Generated HTML returned from AI |
+| **Cache write** | First call in a session — caches the 147KB system prompt |
+| **Cache read** | Subsequent calls reuse cached prompt (much cheaper) |
+
+The conversion log shows tokens for each, plus the section equivalent.
+
+## Cost per conversion (informational)
+
+What WE pay Anthropic per conversion (we absorb this — your plan price covers it):
+
+| Conversion type | Tokens (typical) | Our cost |
+|---|---|---|
+| Simple section (hero, CTA) | 6,000-8,000 | $0.30-0.40 |
+| Medium section (tabs, pricing) | 10,000-15,000 | $0.50-0.70 |
+| Complex section (forms, multi-tab) | 18,000-30,000 | $0.90-1.50 |
+
+This cost is **NOT charged to you** — your plan price covers it. Shown here for transparency.
+
+## Projecting your usage
+
+The dashboard predicts your end-of-month total based on current pace:
+
+> *"On track for 142 sections this month. Cap is 165 (Studio plan). You'll have 23 sections remaining."*
+
+Or, if you're over-pace:
+
+> *"On track for 210 sections this month. Cap is 165 (Studio plan). At current rate, you'll need 45 sections of overage ($29.25)."*
+
+Use this to:
+- Throttle usage if approaching cap
+- Plan to upgrade before cap if heading over
+- Buy overage credits proactively
+
+## Rollover credits
+
+Sections you don't use this month roll forward.
+
+The dashboard shows:
+
+- **This month's rollover from last month**: 32 sections
+- **This month's allocation**: 165 sections (your plan)
+- **Total available**: 197 sections
+- **Used so far**: 88 sections
+- **Remaining**: 109 sections
+
+[SCREENSHOT: Rollover credits breakdown]
+
+Rollover credits are **used last** (current allocation drains first). If you cancel, rollover credits expire.
+
+## Per-site breakdown
+
+For agencies billing clients per site:
+
+Switch chart filter to **"By site"** to see:
+
+| Client site | Sections used | Approx cost (your plan rate) |
+|---|---|---|
+| clientA.com | 28 | ~$16.80 |
+| clientB.com | 42 | ~$25.20 |
+| clientC.com | 18 | ~$10.80 |
+
+Useful for itemizing your service bill to each client.
+
+## Exporting usage data
+
+Bottom of the dashboard → **Export usage CSV**.
+
+Includes every conversion this month with timestamps, sites, tokens, and section counts.
+
+For agency clients who want to see exactly what was billed for their site.
+
+## Setting an overage cap
+
+Avoid surprise bills:
+
+Settings → Billing → **Maximum overage per month** → set a dollar limit (e.g. $50).
+
+When overage hits the cap, further conversions are blocked until next renewal or you raise the cap.
+
+Default: **$50 overage cap** (set automatically for new subscribers).
+
+## Email alerts
+
+You'll get email notifications at:
+
+- **80% of monthly cap** — "you've used 132/165 sections this month"
+- **100% of cap** — "you've hit your monthly cap; overage now active"
+- **80% of overage cap** — "you've spent $40 in overage; cap is $50"
+- **100% of overage cap** — "overage cap hit; conversions blocked"
+
+Toggle these in Settings → Notifications.
+
+## Common questions
+
+**Q: Why does the dashboard show "0 sections charged" for a successful conversion?**
+Engine errors or extremely small sections (under 200 tokens) sometimes don't trigger billing.
+
+**Q: My token count seems high — am I being overcharged?**
+Tokens != sections. The dashboard shows BOTH. Sections is what counts against your plan. Tokens are informational.
+
+**Q: I see a conversion in History but not in Usage dashboard**
+Cap is calculated on calendar months. Usage dashboard shows current month only. Check History for older.
+
+**Q: How do I see usage from previous months?**
+Top of dashboard → **Month selector** → pick previous month.
+
+**Q: Can my team see usage if we share an account?**
+Yes — single login = single usage view. Shared accounts see the same data.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Plans & Pricing" href="/billing/plans" icon="tag" horizontal="false">
+    Pick or change your plan tier.
+  </Card>
+
+  <Card title="History View" href="/advanced/history" icon="clock" horizontal="false">
+    Drill into individual past conversions.
+  </Card>
+</Columns>

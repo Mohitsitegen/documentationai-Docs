@@ -1,0 +1,193 @@
+---
+title: Conversion Errors
+description: Specific conversion error messages and how to fix each one.
+---
+
+## "Conversion took too long (over 60s)"
+
+**Cause:** Section is too complex for the 60-second function timeout (Vercel hobby limit).
+
+**Fixes:**
+1. **Convert smaller sub-sections** — split your tall Figma frame into separate sections, convert each one separately
+2. **Retry once** — first call is "cold cache" and slowest; second call is faster
+3. **Reduce Figma complexity** — convert sections with fewer than 50 layers; sections with 100+ may timeout
+4. **Upgrade to Agency plan** — priority queue + extended function time
+
+## "Figma token invalid"
+
+**Cause:** Your Figma access token is missing, expired, or revoked.
+
+**Fixes:**
+1. Verify token is in the **Figma access token** field on the Convert page
+2. Test the token: visit `https://api.figma.com/v1/me` with header `X-Figma-Token: <yourtoken>` — should return JSON
+3. Regenerate at [figma.com/settings](https://www.figma.com/settings)
+4. Make sure token has **File content: Read** scope
+
+## "Figma file not accessible"
+
+**Cause:** Your Figma token doesn't have access to this specific file.
+
+**Fixes:**
+1. Open the file in Figma directly — confirm you can view it
+2. If file is in a team workspace you're not part of: ask owner to invite you
+3. Test with a file in your own personal workspace first
+
+## "Wrong section converted"
+
+**Cause:** Figma URL points at a different node than the screenshot.
+
+**Fixes:**
+1. In Figma, right-click the OUTER frame of the section (not a child element)
+2. Copy link to selection
+3. Re-paste in SiteZen
+4. Re-convert
+
+The platform auto-walks-up the tree when given small leaf nodes, but doesn't always pick the right ancestor.
+
+## "Conversion failed: rate limit exceeded"
+
+**Cause:** Hit Anthropic API rate limit (too many concurrent conversions).
+
+**Fixes:**
+1. Wait 60 seconds, retry
+2. Don't run multiple conversions in parallel (sequential only)
+3. Reduce batch size if using Frame Detection (try 5 at a time, not 20)
+
+## "Server error: 500"
+
+**Cause:** Engine internal error.
+
+**Fixes:**
+1. Retry immediately (transient errors common)
+2. If persistent: check our status page for outages
+3. If still failing: contact support with the conversion timestamp
+
+## "Out of credits / cap reached"
+
+**Cause:** Hit your monthly section cap (or overage cap).
+
+**Fixes:**
+1. Buy more overage in Settings → Billing
+2. Upgrade your plan tier
+3. Wait until next renewal (rollover credits available next month)
+
+## "Image URL too large"
+
+**Cause:** Vision API has an 8000px-per-dimension cap. Your screenshot exceeds this.
+
+**Fixes:**
+1. Resize screenshot to max 7500×7500 px before uploading
+2. Use a tool like Photoshop, Preview, or [tinypng.com](https://tinypng.com)
+3. For very tall sections, take 2 screenshots and convert as separate sections
+
+## "No screenshot provided" warning
+
+**Cause:** You ran a conversion without uploading a screenshot.
+
+**Fix:** Screenshots are HIGHLY recommended — without one, the engine relies only on Figma data and quality drops significantly. Add a screenshot and re-convert.
+
+## "Push to WordPress failed: 401 Unauthorized"
+
+**Cause:** Connection key invalid.
+
+**Fixes:**
+1. WP Admin → SiteZen → Settings → copy current Connection Key
+2. Platform → Sites → edit site → paste new key → Save
+3. Retry push
+
+## "Push failed: ENOTFOUND" or "ECONNREFUSED"
+
+**Cause:** Platform can't reach your WordPress site.
+
+**Fixes:**
+1. Verify site URL is correct (includes `https://`)
+2. Confirm site is publicly accessible (open in incognito browser to test)
+3. Check that WordPress REST API is enabled (not blocked by security plugins)
+
+## "Push failed: 500 Internal Server Error"
+
+**Cause:** WordPress had an error processing the push.
+
+**Fixes:**
+1. Check `wp-content/debug.log` for the specific PHP error
+2. Deactivate other plugins one-by-one to find conflict
+3. Switch to default theme temporarily to rule out theme conflict
+4. Contact support with the error log excerpt
+
+## "Markdown code fences in output"
+
+**Cause:** AI wrapped the HTML in ```html ... ``` fences despite instructions.
+
+**Fixes:**
+- This is auto-stripped by the platform's normalize step
+- If you still see literal "```html" at the top of pushed content: re-push (the strip step may have been skipped on an older platform version)
+
+## "Section background color wrong"
+
+**Cause:** Figma parent frame has the bg color, your section frame doesn't.
+
+**Fixes:**
+- In Figma, set the fill color on the section frame itself
+- OR set the **Parent background** field on the platform before conversion
+
+## "Tab/accordion/slider missing"
+
+**Cause:** AI didn't detect the interactive component in your Figma design.
+
+**Fixes:**
+1. **Design more obviously interactive** — make tabs look like real tabs (not just rows of text)
+2. **Add active states** — show one tab visually highlighted in your Figma design
+3. **Use Fix Issues** — describe what you want: "Make the top row interactive tabs that switch the content below"
+
+## "Pricing cards not detected as pricing"
+
+**Cause:** Design doesn't have obvious pricing signals (no currency symbol, no checkmark feature list).
+
+**Fixes:**
+1. Add a `$` or currency symbol to prices
+2. Add checkmark icons to feature lists
+3. Use Fix Issues: "Treat these cards as a pricing block"
+
+## "Form fields missing"
+
+**Cause:** Figma form design used images instead of styled inputs.
+
+**Fixes:**
+1. Design form fields as actual rectangles with placeholder text inside
+2. Use Fix Issues: "Convert each rectangle to a real text input"
+
+## "Conversion completed but result is empty"
+
+**Cause:** Engine returned empty HTML (rare).
+
+**Fixes:**
+1. Retry immediately
+2. Try a different screenshot
+3. Try converting a different section to verify the engine is working
+
+## "Internal error: stub returned"
+
+**Cause:** The ANTHROPIC_API_KEY isn't configured (only happens on local dev environments).
+
+**Fix:** This shouldn't happen on the production platform. Contact support.
+
+## How to read engine errors
+
+Errors usually include:
+- **Error code** (e.g. `RATE_LIMIT`, `TIMEOUT`)
+- **Brief message**
+- **Suggestion** for what to do
+
+Send the FULL error message to support if the suggestion doesn't help. Don't paraphrase — exact text helps us debug.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Common Issues" href="/troubleshooting/common-issues" icon="help-circle" horizontal="false">
+    Other frequent issues outside conversion errors.
+  </Card>
+
+  <Card title="Fix Issues Retry" href="/advanced/fix-issues" icon="refresh-cw" horizontal="false">
+    Use plain-English feedback to fix conversion problems.
+  </Card>
+</Columns>

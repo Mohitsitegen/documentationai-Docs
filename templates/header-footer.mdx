@@ -1,0 +1,162 @@
+---
+title: Header & Footer Templates
+description: Build site-wide headers and footers that update everywhere when edited.
+---
+
+## What it does
+
+Header and Footer templates let you design ONCE and have them appear on EVERY page of your site. Edit the template → all pages update instantly.
+
+Without templates, you'd have to add the same header/footer block to every page manually — and update each one whenever you change the navigation.
+
+## When to use them
+
+- Every multi-page site (any site with more than 1 page)
+- Sites with nav menus, logos, social links in the header
+- Sites with contact info, sitemap, legal links in the footer
+
+For single-page sites you only need a header template if you want consistency with future pages.
+
+## Creating a header template
+
+### Option 1: Push from a Figma conversion (recommended)
+
+<Steps>
+  <Step title="Design your header in Figma" icon="figma" title-type="p">
+    Create the header as its own frame — logo on left, nav links on right, optional CTA button.
+  </Step>
+
+  <Step title="Convert with target = SiteZen Template" icon="upload" title-type="p">
+    Platform Convert page → **Where should this section land?** → **SiteZen Template** → **Template type: Header** → **Title: "Main Header"**.
+  </Step>
+
+  <Step title="Apply as active header" icon="check" title-type="p">
+    WP Admin → Appearance → Header → **Header source: SiteZen Template → Main Header**.
+  </Step>
+</Steps>
+
+### Option 2: Create blank then build manually
+
+WP Admin → SiteZen → Templates → **Add New** → Type: Header → name it → opens in Gutenberg editor for manual building.
+
+## Creating a footer template
+
+Same flow as headers, just pick **Template type: Footer**.
+
+Apply via Appearance → Footer → Footer source.
+
+## Common header patterns SiteZen handles
+
+| Pattern | Auto-detected? | Notes |
+|---|---|---|
+| Logo left + nav right | ✅ Yes | Standard layout |
+| Centered logo + nav below | ✅ Yes | Works |
+| Logo left + nav center + CTA right | ✅ Yes | Three-column header |
+| Hamburger menu on mobile | ✅ Yes | Plugin auto-adds responsive nav |
+| Sticky header (stays on scroll) | ✅ Yes | Add class `sz-sticky-nav` |
+| Transparent header over hero | ✅ Yes | Add class `sz-transparent` |
+| Mega menu with submenus | ✅ Yes | Design submenu groups in Figma |
+| Search bar in header | ⚠️ Partial | Renders, but search functionality needs WP search plugin |
+
+## Common footer patterns
+
+| Pattern | Auto-detected? |
+|---|---|
+| Multi-column footer with link lists | ✅ |
+| Newsletter signup form | ✅ |
+| Social icons row | ✅ |
+| Copyright + legal links | ✅ |
+| Full address + contact info | ✅ |
+| Sitemap-style link explorer | ✅ |
+
+## Editing nav menu items
+
+Header templates often include nav menus. Two ways to manage:
+
+### Option A: Hardcoded links (simpler)
+- Edit the template directly
+- Click each nav link → change URL/label in sidebar
+- All pages update on save
+
+**Pros:** Simple, no extra config
+**Cons:** Need to edit template for every menu change
+
+### Option B: Linked to a WordPress Menu (recommended for dynamic sites)
+- WP Admin → Appearance → Menus → create a menu
+- Add pages, posts, custom links
+- In your header template, replace the static nav with `<!-- wp:sitezen/wp-menu /-->`
+- The menu now pulls from WP's menu system
+
+**Pros:** Edit menu without touching template, supports dropdowns, drag-reorder
+**Cons:** Slight learning curve
+
+## Multiple headers / footers
+
+You can have multiple header templates and switch which is active:
+
+- **Default header**: shown on most pages
+- **Landing page header**: minimal version (logo only) for high-conversion pages
+- **Dark mode header**: version for dark backgrounds
+
+To set per-page:
+1. Edit the page
+2. Page sidebar → **Header override** → pick a different template
+3. Save → that page uses the override
+
+## Mobile responsiveness
+
+All header templates auto-include:
+- Hamburger menu icon (replaces nav links on mobile)
+- Slide-out menu drawer
+- Touch-friendly tap targets
+- Logo resizing
+
+To customize the mobile behavior:
+1. Template sidebar → **Mobile** tab
+2. Toggle hamburger position (left/right)
+3. Set breakpoint (default 768px)
+4. Configure drawer animation
+
+[SCREENSHOT: Header template with mobile preview]
+
+## Sticky header configuration
+
+For headers that stay visible as user scrolls:
+
+1. Open header template
+2. Section sidebar → **Behavior** → toggle **Sticky on scroll**
+3. Optional: **Shrink on scroll** → smaller version after scrolling 100px
+4. Optional: **Hide on scroll down, show on scroll up** (modern UX pattern)
+
+## Common issues
+
+**Header / footer not appearing on pages**
+- Template wasn't assigned. Appearance → Header → Source → pick the SiteZen template.
+- Theme overrides SiteZen. Some themes (Astra, Blocksy) have their own header settings — switch their header to "None" or "Disable".
+
+**Logo not loading**
+Image URL is broken. Edit template → click logo → re-upload from media library.
+
+**Nav menu links go to wrong URLs**
+Hardcoded URLs. Edit template → fix each link.
+
+**Header looks fine on desktop, broken on mobile**
+Mobile responsive rules missing. Check Mobile tab in template sidebar.
+
+**Sticky header overlaps content**
+Need top padding on main content. Add CSS: `body { padding-top: 80px; }` (adjust to header height).
+
+**Changes to template don't appear on live site**
+Page caching plugin. Clear cache after every template change.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Templates Overview" href="/templates/overview" icon="copy" horizontal="false">
+    General template concepts.
+  </Card>
+
+  <Card title="Push Targets" href="/advanced/push-targets" icon="map-pin" horizontal="false">
+    How to push directly to a Header / Footer template.
+  </Card>
+</Columns>

@@ -1,0 +1,153 @@
+---
+title: Performance & SEO
+description: Built-in optimization for fast pages and search engine visibility.
+---
+
+## What it does
+
+SiteZen ships with **Performance** and **SEO** modules that work out of the box — no setup needed for basic protection, with advanced controls if you want to tune.
+
+## Performance module
+
+### What it does automatically
+
+| Optimization | What it does |
+|---|---|
+| **CSS externalization** | Inline `<style>` blocks extracted to hashed CSS files (browser-cacheable forever) |
+| **Image lazy loading** | Off-screen images load only when scrolled into view |
+| **Google Fonts swap** | Adds `display=swap` to prevent invisible text during font load |
+| **Preconnect hints** | DNS-prefetch + preconnect for external CDNs (fonts, videos, maps) |
+| **HTML minification** | Strips whitespace and comments from rendered pages |
+| **Script defer** | Plugin's frontend.js loaded with `defer` (doesn't block render) |
+
+All on by default. Toggle off individually in WP Admin → SiteZen → Modules → Performance.
+
+[SCREENSHOT: Performance module settings page]
+
+### Cache configuration
+
+| Setting | Default | What it controls |
+|---|---|---|
+| **CSS cache duration** | Forever (hash-based) | New CSS = new hash = new file; old files stay cached |
+| **Image lazy load threshold** | 200px before viewport | How early to start loading images as user scrolls |
+| **Connection-aware loading** | On | Slow connections (2G/3G) skip video/animation loading |
+
+### Advanced controls
+
+For agencies running their own caching layer (Cloudflare, WP Rocket, etc.):
+
+- **Bypass CSS externalization** — keep inline styles if you handle CSS separately
+- **Bypass lazy loading** — if another plugin handles it
+- **Custom preload URLs** — preload specific resources critical to your design
+
+### Measuring impact
+
+Compare before/after with:
+- [PageSpeed Insights](https://pagespeed.web.dev) — measures Core Web Vitals
+- [GTmetrix](https://gtmetrix.com) — detailed performance breakdown
+- [WebPageTest](https://www.webpagetest.org) — multi-location testing
+
+SiteZen typically delivers 90+ Lighthouse scores on mobile out of the box.
+
+---
+
+## SEO module
+
+### What it does automatically
+
+| SEO element | What's set |
+|---|---|
+| **Page title** | Reads from your section's H1 if no title set |
+| **Meta description** | Reads from your first paragraph if no description set |
+| **OpenGraph tags** | og:title, og:description, og:image (auto from page) |
+| **Twitter cards** | summary_large_image with auto-image |
+| **Canonical URL** | Set to the page's own URL |
+| **JSON-LD Organization** | Sitewide schema (name, URL) |
+| **JSON-LD BreadcrumbList** | Per-page schema |
+| **Sitemap** | Auto-generated at `/sitemap.xml` |
+| **Robots meta** | `max-image-preview:large` (rich snippets) |
+
+[SCREENSHOT: SEO module settings page]
+
+### Per-page SEO controls
+
+In any page editor, the SiteZen Section block has SEO sidebar:
+
+| Field | Use for |
+|---|---|
+| **Meta title** | Override the auto-derived title |
+| **Meta description** | Override auto-derived description (160 char max) |
+| **OG image** | Featured social-share image |
+| **Canonical URL** | If this page should redirect SEO authority elsewhere |
+| **No-index** | Hide from search engines (e.g. thank-you pages) |
+
+### Custom schema
+
+Add structured data per page:
+
+1. Block sidebar → **SEO** → **Custom Schema**
+2. Paste JSON-LD (e.g. Product, Article, FAQ schema)
+3. Save → rendered in `<head>`
+
+Useful for rich results — products, recipes, events, FAQ pages.
+
+### Sitemap configuration
+
+WP Admin → SiteZen → SEO → Sitemap:
+
+- **Include post types** — which CPTs appear in sitemap
+- **Exclude pages** — hide specific pages
+- **Update frequency** — how often search engines should re-crawl
+- **Submit to Google** — push sitemap to Google Search Console automatically
+
+### Compatibility with Yoast / Rank Math
+
+SiteZen's SEO module **defers to** Yoast / Rank Math if they're active. No conflict, no duplicate tags. The module's features only activate for fields those plugins don't cover.
+
+If you want SiteZen's SEO module fully off:
+- WP Admin → SiteZen → Modules → SEO → **Disable**
+
+## Common issues
+
+### Performance
+
+**CSS file 404 on the live site**
+The hashed file path doesn't match. Re-save the page (WP Admin → Pages → Update) to regenerate the CSS file at the correct hash.
+
+**Images not lazy loading**
+Another image-handling plugin (Smush, Optimole) is overriding SiteZen's lazy load. Either disable theirs or toggle SiteZen's lazy load off.
+
+**Pages still slow after optimization**
+SiteZen optimizes the page's own assets. Slow performance can also come from:
+- Slow host (move to better hosting)
+- Heavy theme (try a lightweight theme)
+- Other plugins (deactivate one-by-one to identify culprit)
+- Large unoptimized images uploaded outside SiteZen
+
+### SEO
+
+**Meta description not appearing**
+- Check the block's SEO sidebar — is a description set?
+- Check `<head>` source — is `<meta name="description">` there?
+- If Yoast/Rank Math active, they may be overriding — set description there too
+
+**Sitemap not generating**
+WP rewrite rules need flushing. WP Admin → Settings → Permalinks → Save (without changing anything). Re-check `/sitemap.xml`.
+
+**No-index pages still appear in Google**
+Google takes time to drop indexed pages. Confirm no-index meta tag is in source. Wait 1-2 weeks; faster removal via Google Search Console → URL inspection → Request removal.
+
+**OG image not showing on social shares**
+Facebook caches OG data aggressively. Force refresh: [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) → enter URL → Scrape Again.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="SMTP Setup" href="/modules/smtp" icon="mail" horizontal="false">
+    Reliable email delivery for forms.
+  </Card>
+
+  <Card title="Custom Fonts" href="/modules/fonts" icon="type" horizontal="false">
+    Self-hosted fonts for branding + performance.
+  </Card>
+</Columns>

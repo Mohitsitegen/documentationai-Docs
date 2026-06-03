@@ -1,0 +1,198 @@
+---
+title: SMTP Setup
+description: Configure reliable email delivery for form submissions and notifications.
+---
+
+## What it does
+
+By default, WordPress sends email through PHP's `mail()` function. This is **unreliable** — most managed hosts block it, and even when it works, emails often land in spam.
+
+SiteZen's **SMTP module** routes email through a real SMTP service so form submissions, password resets, and notifications actually reach inboxes.
+
+## When to set it up
+
+**Immediately after activating the SiteZen plugin** — before using forms in production.
+
+Without SMTP:
+- Form submissions silently fail
+- Password reset emails never arrive
+- Admin notifications get lost
+- You'll think the form is broken when it's actually email failing
+
+With SMTP:
+- 99%+ delivery rate
+- Emails land in inboxes, not spam
+- Track delivery in your SMTP provider's dashboard
+
+## Supported SMTP providers
+
+| Provider | Best for | Free tier |
+|---|---|---|
+| **Brevo (Sendinblue)** | Beginners, transactional + marketing | 300 emails/day free |
+| **SendGrid** | Production at scale | 100/day free |
+| **Mailgun** | Developers, API-first | 5,000 first 3 months |
+| **Amazon SES** | Cheapest at scale | $0.10 per 1k emails |
+| **Postmark** | Highest deliverability | Paid only ($15/mo) |
+| **Gmail SMTP** | Tiny sites (NOT recommended for forms) | 500 emails/day |
+| **Custom SMTP** | Your own mail server | — |
+
+For most SiteZen users, **Brevo's free tier** covers contact form volumes (~10/day for small sites).
+
+## Setting up Brevo (recommended for beginners)
+
+<Steps>
+  <Step title="Create a Brevo account" icon="user-plus" title-type="p">
+    Go to [brevo.com](https://www.brevo.com) → free signup. No credit card required.
+  </Step>
+
+  <Step title="Verify your sending email" icon="check" title-type="p">
+    Brevo → Senders & IPs → Add a sender → enter your "from" email (e.g. hello@yoursite.com). Confirm via email.
+  </Step>
+
+  <Step title="Generate an SMTP key" icon="key" title-type="p">
+    Brevo → SMTP & API → SMTP tab → Copy your SMTP key (it looks like a long random string).
+  </Step>
+
+  <Step title="Configure SiteZen SMTP" icon="settings" title-type="p">
+    WP Admin → SiteZen → Modules → SMTP. Fill in:
+    - **SMTP host**: `smtp-relay.brevo.com`
+    - **Port**: `587`
+    - **Encryption**: TLS
+    - **Authentication**: On
+    - **Username**: your Brevo login email
+    - **Password**: paste the SMTP key
+    - **From email**: your verified sender
+    - **From name**: "YourSite Notifications" or similar
+  </Step>
+
+  <Step title="Send a test email" icon="send" title-type="p">
+    Click **Send Test Email**. Enter your personal email. Should arrive in ~5 seconds.
+  </Step>
+</Steps>
+
+[SCREENSHOT: SiteZen SMTP settings page]
+
+## Setting up SendGrid
+
+<Steps>
+  <Step title="Create SendGrid account" icon="user-plus" title-type="p">
+    [sendgrid.com](https://sendgrid.com) → free signup.
+  </Step>
+
+  <Step title="Verify single sender" icon="check" title-type="p">
+    SendGrid → Settings → Sender Authentication → Verify a sender.
+  </Step>
+
+  <Step title="Generate API key" icon="key" title-type="p">
+    SendGrid → Settings → API Keys → Create API key → "Mail Send" permission only.
+  </Step>
+
+  <Step title="Configure SiteZen" icon="settings" title-type="p">
+    SiteZen SMTP settings:
+    - **SMTP host**: `smtp.sendgrid.net`
+    - **Port**: `587`
+    - **Encryption**: TLS
+    - **Username**: `apikey` (literally the word "apikey")
+    - **Password**: paste the API key
+  </Step>
+</Steps>
+
+## Setting up Gmail SMTP (NOT recommended for production)
+
+Gmail's SMTP works but has serious limitations:
+- 500 emails/day cap (low)
+- Requires "App Password" (not your normal password)
+- Google may flag as suspicious activity
+- Personal Gmail not allowed for transactional sends (use Google Workspace)
+
+If you must use Gmail:
+
+1. Google Account → Security → 2-Step Verification (enable if not on)
+2. Google Account → Security → App passwords → generate one for "Mail"
+3. SiteZen SMTP settings:
+   - Host: `smtp.gmail.com`
+   - Port: `587`
+   - Encryption: TLS
+   - Username: your Gmail address
+   - Password: the App Password (NOT your Gmail password)
+
+## Custom SMTP
+
+If you have your own mail server (e.g. Postfix, Microsoft 365, Zoho):
+
+- Get SMTP host, port, encryption type, username, password from your mail provider
+- Fill in SiteZen SMTP settings
+- Test
+
+## DNS records (recommended for production)
+
+To maximize deliverability, set up these DNS records for your sending domain:
+
+### SPF
+Tells receiving servers "this provider is authorized to send for me".
+
+Example for Brevo: `v=spf1 include:spf.brevo.com -all`
+
+### DKIM
+Cryptographically signs emails so receivers can verify authenticity.
+
+Your SMTP provider gives you a DKIM record to add. Example for SendGrid: a TXT record like `s1._domainkey.yourdomain.com → s1.domainkey.u1234.wl.sendgrid.net`
+
+### DMARC
+Tells receivers what to do if SPF/DKIM fail.
+
+Start lenient: `v=DMARC1; p=none; rua=mailto:reports@yourdomain.com`
+
+Once you've verified no legitimate mail is failing, tighten to: `v=DMARC1; p=quarantine;`
+
+Without SPF/DKIM/DMARC, your emails may land in spam regardless of SMTP setup.
+
+## Email log
+
+SiteZen tracks every email sent via SMTP:
+
+WP Admin → SiteZen → SMTP → Email Log
+
+Shows:
+- Recipient
+- Subject
+- Timestamp
+- Status (sent / failed / opened — if your provider supports tracking)
+
+Filter by status to see failures, click any row to see error details.
+
+## Common issues
+
+**Test email fails: "Authentication failed"**
+- Username or password wrong (recheck, no spaces)
+- Provider blocked the login attempt (check provider dashboard for security alerts)
+- Two-factor auth on the account (use an app password)
+
+**Test email succeeds but real form emails don't arrive**
+- Check spam folder
+- Check SMTP log in SiteZen → SMTP → Email Log → was it sent?
+- If sent but not received, provider may be silently dropping (check provider dashboard for blocked sends)
+
+**Emails arrive but land in spam**
+- Set up SPF, DKIM, DMARC DNS records
+- Send from your domain's email (e.g. hello@yoursite.com), NOT a free gmail/yahoo
+- Avoid spammy subject lines ("FREE", excessive caps)
+
+**"Connection timed out" error**
+- Wrong port (try 465 with SSL if 587 with TLS doesn't work)
+- Host firewall blocking outbound SMTP (rare on managed WP, common on AWS / DigitalOcean — open port 587)
+
+**Provider banned for "suspicious activity"**
+You hit volume too fast. Brevo / SendGrid throttle new accounts. Warm up slowly (send 10 emails first day, double daily).
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Forms Block" href="/blocks/forms" icon="edit" horizontal="false">
+    Forms that need SMTP to deliver submissions.
+  </Card>
+
+  <Card title="Integrations" href="/modules/integrations" icon="link" horizontal="false">
+    Forward form submissions to Mailchimp, ConvertKit, etc.
+  </Card>
+</Columns>

@@ -114,13 +114,75 @@
                 "title": "Templates Overview",
                 "path": "templates/overview",
                 "icon": "copy"
+              },
+              {
+                "title": "Header & Footer",
+                "path": "templates/header-footer",
+                "icon": "layout"
+              },
+              {
+                "title": "Tab Content Templates",
+                "path": "templates/tab-templates",
+                "icon": "columns"
+              },
+              {
+                "title": "CPT Single Templates",
+                "path": "templates/cpt-single",
+                "icon": "file-text"
               }
             ]
           },
           {
-            "group": "Advanced (coming next)",
+            "group": "Advanced",
             "icon": "settings",
-            "pages": []
+            "pages": [
+              {
+                "title": "Push Targets",
+                "path": "advanced/push-targets",
+                "icon": "map-pin"
+              },
+              {
+                "title": "Fix Issues Retry",
+                "path": "advanced/fix-issues",
+                "icon": "refresh-cw"
+              },
+              {
+                "title": "Frame Detection (Batch)",
+                "path": "advanced/frame-detection",
+                "icon": "grid"
+              },
+              {
+                "title": "History View",
+                "path": "advanced/history",
+                "icon": "clock"
+              }
+            ]
+          },
+          {
+            "group": "Plugin Modules",
+            "icon": "package",
+            "pages": [
+              {
+                "title": "Performance & SEO",
+                "path": "modules/performance-seo",
+                "icon": "zap"
+              },
+              {
+                "title": "SMTP Setup",
+                "path": "modules/smtp",
+                "icon": "mail"
+              },
+              {
+                "title": "Custom Fonts",
+                "path": "modules/fonts",
+                "icon": "type"
+              },
+              {
+                "title": "Third-Party Integrations",
+                "path": "modules/integrations",
+                "icon": "link"
+              }
+            ]
           }
         ]
       },
@@ -131,7 +193,18 @@
           {
             "group": "Pricing",
             "icon": "tag",
-            "pages": []
+            "pages": [
+              {
+                "title": "Plans & Pricing",
+                "path": "billing/plans",
+                "icon": "tag"
+              },
+              {
+                "title": "Credits & Usage",
+                "path": "billing/credits-usage",
+                "icon": "bar-chart"
+              }
+            ]
           }
         ]
       },
@@ -145,10 +218,26 @@
             "icon": "home"
           },
           {
-            "group": "Troubleshooting (coming next)",
+            "group": "Troubleshooting",
             "icon": "alert-triangle",
-            "expandable": false,
-            "pages": []
+            "expandable": true,
+            "pages": [
+              {
+                "title": "Common Issues & FAQ",
+                "path": "troubleshooting/common-issues",
+                "icon": "help-circle"
+              },
+              {
+                "title": "Conversion Errors",
+                "path": "troubleshooting/conversion-errors",
+                "icon": "alert-triangle"
+              },
+              {
+                "title": "Plugin Issues",
+                "path": "troubleshooting/plugin-issues",
+                "icon": "alert-circle"
+              }
+            ]
           }
         ]
       },

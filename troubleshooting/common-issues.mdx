@@ -1,0 +1,149 @@
+---
+title: Common Issues & FAQ
+description: Quick answers to the questions agencies ask most often.
+---
+
+## Conversion not matching the design
+
+**Symptoms:** Colors, fonts, or spacing don't exactly match Figma.
+
+**Causes & fixes:**
+
+1. **Wrong Figma node selected** — Re-copy the link from the OUTER section frame (not a child element).
+2. **Outdated Figma data** — If you edited Figma after copying the URL, re-copy the link.
+3. **Screenshot doesn't match Figma URL** — The screenshot is the ground truth for layout. Re-export the screenshot if your design changed.
+4. **Auto-layout missing** — Figma designs without auto-layout produce inconsistent results. Add auto-layout to your section frame and re-convert.
+5. **Use Fix Issues** — Click "Fix Issues" → describe the specific mismatch → AI applies surgical fix.
+
+## Tabs not switching when clicked
+
+**On the frontend:**
+1. Check page source for `sitezen-plugin/assets/js/frontend.js` — must be present
+2. Clear all caching plugins (WP Rocket, W3 Total Cache, etc.)
+3. Check for plugin conflicts — deactivate other plugins one-by-one
+4. Confirm the page was pushed after the latest plugin version
+
+**In the WordPress editor:**
+1. Verify you're using the latest plugin version (1.27.30+)
+2. Hard-refresh the editor tab (Ctrl+Shift+R)
+3. Check browser console for JS errors
+
+## Conversion takes too long / times out
+
+**Symptoms:** "Conversion took too long (over 60s)" error.
+
+**Fixes:**
+1. **Convert smaller sections** — split a tall full-page Figma frame into individual sections
+2. **First conversion in a session is slowest** — retry immediately, subsequent calls are faster (cache warm)
+3. **Hit cap?** — check Usage dashboard, might be a rate limit
+4. **Upgrade to Agency plan** — priority queue, longer function timeout
+
+## "Wrong section converted"
+
+**Symptoms:** Conversion shows different content than your screenshot.
+
+**Cause:** Figma URL points at a different node than the screenshot shows.
+
+**Fix:**
+1. In Figma, right-click the OUTERMOST frame of the section (not a child)
+2. Copy link to selection
+3. Re-paste in SiteZen and re-convert
+
+The platform's v5.6 walk-up logic tries to escape sub-element node-ids automatically, but doesn't always pick the right ancestor for deeply-nested designs.
+
+## Pushed but page is blank
+
+1. **Check WP Admin → Pages** — does the page exist?
+2. **Click the page → View** — does it actually have content in the editor?
+3. **Plugin not active?** WP Admin → Plugins → confirm SiteZen is Active
+4. **Theme conflict?** Switch to Twenty Twenty-Four theme temporarily to test
+5. **Caching plugin?** Clear all caches
+
+## Connection failed when adding a WordPress site
+
+1. **URL must include `https://`** — `yoursite.com` won't work, `https://yoursite.com` will
+2. **Connection key must match exactly** — copy-paste again, no spaces
+3. **WordPress REST API disabled?** — some security plugins block it; temporarily deactivate them
+4. **Site behind firewall/VPN?** — must be publicly accessible
+5. **Connection key regenerated?** — old key invalid, use new one
+
+## Form submissions not arriving via email
+
+1. **Check spam folder first**
+2. **WP Admin → SiteZen → Form Entries** — was the submission saved? If yes, email is the issue.
+3. **Configure SMTP** — see [SMTP Setup](/modules/smtp). WordPress default mail is unreliable.
+4. **Test SMTP** — SiteZen → Modules → SMTP → Send Test Email
+
+## Pricing block "Most Popular" badge missing
+
+Click the card you want featured → sidebar → check **Mark as popular**.
+
+## Slider not scrolling on mobile
+
+1. Touch swipe is built-in — try a different finger gesture
+2. Page-wide horizontal overflow may block touch — check for `overflow-x` issues on parent elements
+3. Disable any "swipe navigation" plugins (they hijack touch events)
+
+## Editor too slow to use
+
+Pages with many heavy blocks (e.g. multiple Post Listings querying large CPTs) can slow the Gutenberg editor. Fixes:
+
+1. **Disable preview** for Post Listings — they query the DB on every render in the editor
+2. **Split long pages** into multiple pages
+3. **Disable other heavy plugins** during editing (re-enable for live)
+4. **Use a faster browser** — Chrome/Firefox > Safari for Gutenberg
+
+## Cannot delete a SiteZen template
+
+It's referenced by another page/block. To delete:
+1. Templates list → click the template → **Used in** → see all references
+2. Edit each referencing page → switch to a different template or detach to INLINE
+3. Then delete
+
+## Custom font uploaded but not applying
+
+1. **Font family name mismatch** — name in SiteZen must match the name in Figma/CSS
+2. **Hard refresh browser** (Ctrl+Shift+R) — browser may cache old fonts
+3. **No element actually uses it** — check WordPress editor that the section references this font name
+
+## reCAPTCHA blocking real users
+
+Score threshold too high. SiteZen → Modules → Integrations → reCAPTCHA → lower **Score threshold** from 0.5 to 0.3.
+
+## Plugin shows "X class file(s) failed to load"
+
+A class file has a PHP error. WordPress kept the plugin running thanks to defensive loading.
+
+1. Open `wp-content/sitezen-bootlog.txt` (created by plugin on failure)
+2. Identifies the specific file
+3. Contact support with the file name + error message
+4. Roll back to a previous plugin version while you wait for fix
+
+## "Page already exists" warning
+
+You're trying to push a "New page" with the same name as an existing one. Either:
+- Use **Existing page → Append** instead
+- Rename the section before pushing
+- Delete the existing page first
+
+## Free trial sections used up
+
+20 free sections expire when used or after 30 days, whichever first. Subscribe to any plan to continue.
+
+## Where can I get more help?
+
+- **Contact support**: [contact form on documentation site] or email
+- **Status page**: check if there's an active outage
+- **Community Slack**: ask other SiteZen users (link in your account)
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Conversion Errors" href="/troubleshooting/conversion-errors" icon="alert-triangle" horizontal="false">
+    Deep dive on specific conversion failure messages.
+  </Card>
+
+  <Card title="Plugin Issues" href="/troubleshooting/plugin-issues" icon="alert-circle" horizontal="false">
+    WordPress plugin installation and activation issues.
+  </Card>
+</Columns>

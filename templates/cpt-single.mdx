@@ -1,0 +1,173 @@
+---
+title: CPT Single Templates
+description: Design the detail-page layout for custom post types (team member, case study, etc.).
+---
+
+## What it does
+
+A **CPT single template** defines what a single post in a custom post type looks like when visited directly.
+
+Example: You have a "Team Members" CPT with 12 team entries. When a visitor clicks "John Doe", they go to `/team/john-doe/`. The CPT single template controls what that John Doe page looks like.
+
+Without a single template, WordPress falls back to your theme's default post template — usually not what you want.
+
+## When to use it
+
+- Any time you create a CPT for **clickable items** (team, case studies, projects, products)
+- When the CPT detail page should have a custom design (different from blog posts)
+- When you want consistency across all CPT detail pages
+
+## When NOT to use it
+
+- CPTs used purely as data containers (e.g. "Testimonials" only ever shown via a listing block, never as their own page)
+- Set the CPT's "Public" setting to false to skip single templates entirely
+
+## Creating a CPT single template
+
+<Steps>
+  <Step title="Design the single-post page in Figma" icon="figma" title-type="p">
+    Design what one team member's page would look like — hero with their photo, bio, contact info, related content, etc. Use placeholder data ("John Doe", "CEO", etc.) — the template uses post data automatically.
+  </Step>
+
+  <Step title="Convert with target = SiteZen Template, type = Single" icon="upload" title-type="p">
+    Platform Convert page → SiteZen Template → **Template type: Single** → **For CPT: team** (pick which CPT this template applies to).
+  </Step>
+
+  <Step title="Push" icon="check" title-type="p">
+    Template is created and auto-assigned to all posts in that CPT.
+  </Step>
+</Steps>
+
+[SCREENSHOT: Convert page with Single CPT template options]
+
+## How dynamic fields work
+
+In your Figma design, you use placeholder content. The plugin replaces placeholders with real post data when rendering each post.
+
+| Placeholder element | Replaced with |
+|---|---|
+| Heading at top of design | Post title |
+| Image at top of design | Featured image |
+| Long paragraph | Post content |
+| Short subtitle | Post excerpt or custom field |
+| Date text | Post publish date |
+
+SiteZen auto-detects what each element should be. To manually override:
+
+1. Edit the template in Gutenberg
+2. Click an element
+3. Sidebar → **Dynamic source** → pick which field this element pulls from
+
+## Available dynamic fields
+
+| Field | Source |
+|---|---|
+| `title` | Post title |
+| `content` | Full post content (HTML) |
+| `excerpt` | Post excerpt |
+| `featured_image` | Featured image URL |
+| `featured_image_alt` | Image alt text |
+| `date` | Publish date (formatted per WordPress settings) |
+| `author` | Author display name |
+| `author_avatar` | Author Gravatar URL |
+| `categories` | Comma-separated category list |
+| `tags` | Comma-separated tag list |
+| `permalink` | This post's URL |
+| `meta:<field_name>` | Any custom field |
+| `acf:<field_name>` | Advanced Custom Fields field |
+
+## Custom fields
+
+For data beyond default post fields (e.g. team member's LinkedIn URL, case study client name):
+
+1. WP Admin → SiteZen → Post Types → your CPT → **Custom Fields** → Add field
+2. Name it (e.g. `linkedin_url`)
+3. Pick type (text, URL, image, etc.)
+4. Save
+
+Now editing any post in that CPT shows the custom field. To use in the template:
+
+1. Edit template → click an element
+2. Dynamic source → **Custom Field** → `linkedin_url`
+3. Save
+
+[SCREENSHOT: Custom field configuration]
+
+## Different templates per post
+
+Some posts may need a different layout (e.g. "Featured" team members get a richer design):
+
+1. Create multiple single templates: "Team Default", "Team Featured"
+2. WP Admin → SiteZen → Post Types → your CPT → **Templates** → set rules:
+   - All posts → Team Default
+   - Posts with category "Featured" → Team Featured
+
+## Related content sections
+
+A common CPT single layout includes "Related Team Members" or "Other Case Studies":
+
+1. In the single template, add a [Post Listings block](/blocks/post-listings)
+2. Configure to query the same CPT
+3. Filter: **Exclude current post** + **Same category**
+
+The "Related" section shows other items from the CPT (but not the current one).
+
+## URL structure
+
+CPT singles use the URL pattern: `/<cpt-slug>/<post-slug>/`
+
+Examples:
+- `/team/john-doe/`
+- `/case-studies/acme-corp/`
+- `/projects/redesign-2026/`
+
+To customize:
+1. WP Admin → SiteZen → Post Types → your CPT → **Settings → URL slug**
+2. Change the CPT slug
+3. Save → all URLs auto-update
+
+## SEO for CPT singles
+
+Each post inherits SEO settings:
+- **Meta title**: post title (auto)
+- **Meta description**: post excerpt (auto)
+- **OG image**: featured image (auto)
+- **Canonical URL**: post URL (auto)
+
+To customize per post:
+1. Edit the post
+2. Sidebar → **SEO** tab
+3. Override any field
+
+Site-wide CPT SEO settings (e.g. always-append " — TeamCo" to all team member titles): WP Admin → SiteZen → Post Types → your CPT → SEO.
+
+## Common issues
+
+**Single page shows default theme template, not SiteZen template**
+- CPT's "Single Template" setting not assigned. WP Admin → SiteZen → Post Types → CPT → Single Template → pick.
+- Permalinks need flushing. Settings → Permalinks → Save (without changing).
+
+**Featured image shows in template but not on actual posts**
+The posts don't have featured images set. Edit each post → Set Featured Image.
+
+**Custom field shows raw `{{linkedin_url}}` instead of value**
+- Field name typo (check template's dynamic source matches field name exactly)
+- Post doesn't have a value for that field (set it in post editor)
+
+**Related posts section shows current post**
+"Exclude current post" not enabled. Edit template → Post Listings block → sidebar → toggle on.
+
+**Single template makes editor slow**
+Heavy templates with many dynamic queries slow the editor preview. Doesn't affect frontend (server-side rendered). Reduce complexity if editor is unusable.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Post Listings" href="/blocks/post-listings" icon="database" horizontal="false">
+    Display CPT entries as listings (the inverse of single templates).
+  </Card>
+
+  <Card title="Templates Overview" href="/templates/overview" icon="copy" horizontal="false">
+    General template concepts.
+  </Card>
+</Columns>

@@ -1,0 +1,153 @@
+---
+title: History View
+description: Browse, search, re-open, and re-push your past conversions.
+---
+
+## What it does
+
+The History view shows every conversion you've run — successful or failed. From here you can:
+
+- See what was converted, when, and where it was pushed
+- Re-open any past conversion to preview it again
+- Use Fix Issues on past conversions
+- Re-push to a different site or page
+- Copy the HTML output to use elsewhere
+
+## When to use it
+
+- Find a conversion from last week to re-push to a new site
+- Re-run a conversion with tweaks after seeing it live
+- Audit your team's conversion activity
+- Re-push if WordPress accidentally lost the page
+
+## Opening History
+
+Click **History** in the platform's left sidebar.
+
+[SCREENSHOT: History page with list of past conversions]
+
+## What each row shows
+
+| Column | Meaning |
+|---|---|
+| **Section name** | What you named the conversion |
+| **Site** | Which WordPress site it was pushed to (or "Not pushed") |
+| **Status** | ✅ Success / ❌ Failed |
+| **Created** | When the conversion ran |
+| **Tokens used** | API tokens for this conversion (cost reference) |
+| **Actions** | Open / Push / Delete |
+
+## Filtering and searching
+
+Top of the History page has filters:
+
+- **Search** — by section name or page URL
+- **Status** — All / Success only / Failed only
+- **Site** — filter by target WordPress site
+- **Date range** — last 7 / 30 / 90 days / custom
+- **Push state** — Pushed / Not pushed
+
+## Opening a past conversion
+
+Click any row → opens the conversion's preview page (same as when you first ran it).
+
+From here you can:
+- View desktop / tablet / mobile preview
+- Click **Fix Issues** to refine
+- Click **Push to WordPress** to push (or re-push) to a site
+- Copy the raw HTML
+
+[SCREENSHOT: Opened past conversion in preview mode]
+
+## Re-pushing to a different site
+
+A common workflow: convert once, push to multiple client sites.
+
+<Steps>
+  <Step title="Open the conversion in History" icon="folder-open" title-type="p">
+    Click the row.
+  </Step>
+
+  <Step title="Click Push to WordPress" icon="upload" title-type="p">
+    Push dialog opens.
+  </Step>
+
+  <Step title="Pick a different site" icon="globe" title-type="p">
+    Site dropdown — choose the new target.
+  </Step>
+
+  <Step title="Push" icon="check" title-type="p">
+    Same HTML pushes to the new site.
+  </Step>
+</Steps>
+
+No re-conversion needed → no API cost incurred → instant push.
+
+## Copying the raw HTML
+
+If you want to use the conversion outside WordPress (e.g. paste into Webflow, custom code):
+
+1. Open the conversion
+2. Top-right → click **View HTML**
+3. Copy the full HTML to your clipboard
+
+The HTML includes inline styles, no external dependencies — works standalone.
+
+## Deleting conversions
+
+To clean up old conversions:
+
+- Click ⋮ on a row → **Delete**
+- Or bulk-select multiple rows → **Delete selected**
+
+Deletion removes the history entry but does NOT delete the WordPress page that was pushed. (Delete that separately in WP Admin → Pages.)
+
+## Conversion limits in history
+
+The platform stores the **last 100 conversions per user** indefinitely. Older conversions are pruned automatically.
+
+For enterprise teams needing longer retention, contact support — extended history is available.
+
+## Token usage per conversion
+
+Each row shows token counts:
+
+- **Input tokens** (Figma data + screenshot)
+- **Output tokens** (generated HTML)
+- **Cache hits** (system prompt cache reads)
+
+Multiply by your current plan's overage rate to see exact cost. See [Credits & Usage](/billing/credits-usage) for the math.
+
+## Exporting history
+
+History → top-right → **Export CSV**.
+
+Includes all visible (filtered) rows with timestamps, sites, token counts, push URLs, status. Useful for billing reconciliation or reporting to clients.
+
+## Common issues
+
+**Conversion is missing from history**
+- Older than 100 most-recent conversions (auto-pruned)
+- Filter is hiding it (clear all filters)
+- Different user account (history is per-user)
+
+**Can't re-push a failed conversion**
+Failed conversions have no usable HTML. Re-run the conversion fresh (same Figma URL + screenshot) instead.
+
+**Re-push lands at wrong page**
+You picked a different site or push mode than the original. Double-check the push dialog before confirming.
+
+**HTML download includes broken images**
+Images were uploaded to a specific WordPress site's media library — when copied elsewhere, those URLs may 404. Use the conversion's images from your media library or re-host them.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Fix Issues" href="/advanced/fix-issues" icon="refresh-cw" horizontal="false">
+    Refine past conversions before re-pushing.
+  </Card>
+
+  <Card title="Credits & Usage" href="/billing/credits-usage" icon="bar-chart" horizontal="false">
+    Track API usage and costs in detail.
+  </Card>
+</Columns>

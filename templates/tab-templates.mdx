@@ -1,0 +1,150 @@
+---
+title: Tab Content Templates
+description: Reusable templates for tab panel content — edit once, update everywhere.
+---
+
+## What it does
+
+Tab content templates store the inner content of a tab panel as a separate template post. The Tabs block references the template instead of containing inline content.
+
+So if "Pricing FAQ Tab 1" content is used on 3 different pricing pages, it lives as ONE template — edit once, all 3 pages update.
+
+## When to use them
+
+- **Same tab content reused** across multiple sections or pages
+- **Frequently-edited content** that needs to update everywhere instantly
+- **Designer-content team handoff** — designer edits sections, content team edits templates
+- **Multilingual sites** — different language templates referenced by same tab block
+
+## How they relate to Tabs blocks
+
+A Tabs block has N tabs. Each tab independently is either:
+
+- **INLINE**: content stored in the block itself (default for fresh conversions)
+- **TEMPLATE**: content stored in a separate template post (the block just references it)
+
+You can mix modes — tab 1 INLINE, tab 2 TEMPLATE, tab 3 INLINE, etc.
+
+[SCREENSHOT: Tabs block sidebar showing per-tab mode badges]
+
+## Creating a tab template
+
+### Method 1: Direct push (recommended)
+
+<Steps>
+  <Step title="Design the tab content in Figma" icon="figma" title-type="p">
+    Design just the inside of one tab panel — the cards/copy/grid that would appear when that tab is active.
+  </Step>
+
+  <Step title="Convert with target = SiteZen Template, type = Tab" icon="upload" title-type="p">
+    Platform Convert page → SiteZen Template → Tab → name (e.g. "Pricing FAQ — Plans Tab").
+  </Step>
+
+  <Step title="Reference from a Tabs block" icon="link" title-type="p">
+    Open any page with a Tabs block → click the tab section → sidebar → per-tab → **Replace with template** → pick your new template.
+  </Step>
+</Steps>
+
+### Method 2: Auto-created during push
+
+When you push a section with tabs, SiteZen can **automatically create a template per tab**:
+
+- Engine emits tab content inline
+- Push API extracts each tab's content
+- Creates one template per tab (titled e.g. "Industry Tabs — Tab 1")
+- Wires the block to reference those templates
+
+Toggle on/off in the push dialog. **On by default** for new conversions.
+
+### Method 3: Convert inline → template later
+
+If a tab is currently INLINE and you want to convert it to TEMPLATE:
+
+1. WP editor → click the tab section
+2. Sidebar → that tab → **Convert to template**
+3. Title the new template → click Create
+4. Inline content moves to the new template, block now references it
+
+## Editing a tab template
+
+WP Admin → **SiteZen → Templates** → click your tab template → edit in Gutenberg.
+
+Save → all tabs referencing this template update instantly.
+
+## Multiple tabs sharing one template
+
+Two different Tabs blocks can reference the SAME template:
+
+- Pricing page "FAQ" tab → references template "Pricing FAQ — General"
+- Support page "FAQ" tab → references same template "Pricing FAQ — General"
+
+Result: edit once, both pages update. Powerful for site-wide reusable content.
+
+## Switching a tab from TEMPLATE to INLINE
+
+If you want to customize a tab's content for just one page without affecting others:
+
+1. WP editor → click the tab section
+2. Sidebar → that tab → **Detach template** (or **Convert to inline**)
+3. Template content gets copied into the block as inline content
+4. Edit freely — your changes only affect THIS page now
+
+The template itself is unaffected and still used by other tabs that reference it.
+
+## Default content for new tabs
+
+When you switch a tab to TEMPLATE mode, the picker offers:
+
+- **Select existing template** — reuse a template
+- **Create new from current content** — convert this tab's inline content into a new template
+- **Create new blank template** — start from scratch
+
+[SCREENSHOT: Template picker dropdown options]
+
+## Linking the same template across sites
+
+If you manage multiple WordPress sites under one SiteZen account:
+
+- Templates DON'T sync automatically across sites (each site has its own templates)
+- To use the same template on multiple sites:
+  1. Build/edit on Site A
+  2. Export template (WP Admin → Templates → click template → Export → downloads .xml)
+  3. Import on Site B (WP Admin → Templates → Import)
+
+Centralized template sharing across sites is on the roadmap.
+
+## Common issues
+
+**Template doesn't appear in the picker**
+- Wrong type — only "tab" templates show in the tab picker (not "header" or "footer" templates)
+- Template not published — change status from Draft to Published
+
+**Tab still shows inline content after picking a template**
+- Page wasn't saved — click Update on the page
+- Browser cache — hard refresh
+
+**Editing template breaks one specific page**
+The page's other content depends on the old template layout. Solution: either:
+- Edit that page to accommodate the new template
+- Detach that page's tab to inline mode (custom content for that page only)
+
+**"Template in use" warning when trying to delete**
+SiteZen prevents deleting templates that are referenced. Find usages:
+- Template editor → top right → **Used in** → lists pages referencing it
+- Replace template on each page OR detach to inline, then delete
+
+**Auto-created templates have weird names**
+Default format is `<Section Name> — Tab N`. Rename:
+- Templates list → click template → edit title → save
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Tabs Block" href="/blocks/tabs" icon="columns" horizontal="false">
+    The Tabs block that references these templates.
+  </Card>
+
+  <Card title="Templates Overview" href="/templates/overview" icon="copy" horizontal="false">
+    General template concepts and other template types.
+  </Card>
+</Columns>

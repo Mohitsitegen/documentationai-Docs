@@ -1,0 +1,218 @@
+---
+title: Plugin Installation & Activation Issues
+description: Fixing WordPress-side problems with the SiteZen plugin.
+---
+
+## "Plugin file does not exist"
+
+**Cause:** WordPress is trying to activate a plugin path that no longer exists on disk. Usually from a previous install where the folder structure was wrong.
+
+**Fix:**
+
+<Steps>
+  <Step title="Install WP File Manager" icon="folder" title-type="p">
+    Install the free plugin `WP File Manager` (by mndpsingh287) from WP Admin → Plugins → Add New.
+  </Step>
+
+  <Step title="Delete ALL sitezen folders" icon="trash" title-type="p">
+    Navigate to `wp-content/plugins/` → delete every folder starting with `sitezen` (`sitezen-plugin`, `sitezen-plugin-2`, etc.).
+  </Step>
+
+  <Step title="Re-upload zip" icon="upload" title-type="p">
+    Plugins → Add New → Upload Plugin → fresh `sitezen-plugin.zip` → Install → Activate.
+  </Step>
+
+  <Step title="(Optional) Remove WP File Manager" icon="x" title-type="p">
+    Once SiteZen activates cleanly, you can remove WP File Manager.
+  </Step>
+</Steps>
+
+## "Plugin could not be activated because it triggered a fatal error"
+
+**Cause:** PHP error during plugin load.
+
+**Fixes:**
+
+### Step 1: Check PHP version
+- WP Admin → Tools → Site Health → Info → Server → PHP version
+- SiteZen requires **PHP 7.4 or higher**
+- If lower, contact your host to upgrade PHP
+
+### Step 2: Check WP version
+- SiteZen requires **WordPress 6.3 or higher**
+- WP Admin → Dashboard → Updates → upgrade if needed
+
+### Step 3: Read the error log
+- Enable WP_DEBUG in `wp-config.php`:
+  ```
+  define('WP_DEBUG', true);
+  define('WP_DEBUG_LOG', true);
+  define('WP_DEBUG_DISPLAY', false);
+  ```
+- Try to activate again → check `wp-content/debug.log` for the specific error
+- Send the error to support
+
+### Step 4: Check for sitezen-bootlog
+The plugin's defensive loader creates `wp-content/sitezen-bootlog.txt` if any class file fails. Read this file — it identifies the broken file.
+
+## Plugin uploads but doesn't appear in plugin list
+
+**Cause:** Zip extracted incorrectly.
+
+**Fixes:**
+1. Re-download the zip from your SiteZen account
+2. Confirm it's not corrupted (file size matches what's listed)
+3. Hard-refresh the plugins page (Ctrl+Shift+R)
+4. Manual install via FTP/File Manager:
+   - Extract zip locally
+   - Upload the `sitezen-plugin/` folder directly to `wp-content/plugins/`
+   - Confirm folder structure: `wp-content/plugins/sitezen-plugin/sitezen.php` (NOT `wp-content/plugins/sitezen-plugin/sitezen-plugin/sitezen.php`)
+
+## After activation, no SiteZen menu in admin sidebar
+
+**Cause:** Plugin loaded but admin UI didn't register.
+
+**Fixes:**
+1. Hard-refresh admin (Ctrl+Shift+R)
+2. Check user permissions — non-admin users won't see SiteZen menu
+3. Deactivate → reactivate the plugin
+4. Check for plugin conflicts (deactivate others one-by-one)
+
+## "Class 'SiteZen_X' not found" error
+
+**Cause:** A class file failed to load.
+
+**Fixes:**
+1. Check `wp-content/sitezen-bootlog.txt` — identifies which class
+2. Re-upload the plugin zip (file may have corrupted in transit)
+3. If specific to one class, that class's features won't work — but the rest of the plugin should
+4. Contact support with the bootlog contents
+
+## Connection key not generated
+
+**Cause:** Plugin activated but key generation failed (DB write error).
+
+**Fixes:**
+1. WP Admin → SiteZen → Settings → click **Regenerate Connection Key**
+2. If still blank: check DB write permissions (WordPress can write to `wp_options` table)
+3. Last resort: manually set via wp-cli or DB query
+
+## "REST API not available"
+
+**Cause:** WordPress REST API is disabled (security plugin, theme function).
+
+**Fixes:**
+1. Visit `https://yoursite.com/wp-json/` — should return JSON
+2. If 404 or HTML: REST API blocked
+3. Common culprits:
+   - **Disable REST API** plugin → deactivate
+   - **WordFence** → settings → uncheck "Disable REST API"
+   - Theme `functions.php` may have `remove_action('rest_api_init', ...)` — remove that
+4. Permalinks may need flushing → Settings → Permalinks → Save (no changes)
+
+## Plugin update fails
+
+**Cause:** WordPress can't replace files (permissions or FTP credentials).
+
+**Fixes:**
+1. Verify `wp-content/plugins/sitezen-plugin/` is writable (chmod 755 on Unix hosts)
+2. Try manual update:
+   - Deactivate plugin
+   - Delete old folder via File Manager
+   - Upload new zip → Install → Activate
+3. Note: connection key persists across updates (stored in DB, not files)
+
+## After update, plugin shows "Settings have been reset"
+
+**Shouldn't happen** — settings persist via DB. If it does:
+1. Check WP DB → `wp_options` table → look for rows starting with `sitezen_`
+2. If missing: settings were dropped during update (rare bug)
+3. Reconfigure from scratch + contact support
+
+## Conflict with another plugin
+
+**Symptoms:** SiteZen works alone but breaks when X is active.
+
+**Find conflict:**
+1. Deactivate ALL plugins except SiteZen
+2. SiteZen now works? → yes, it's another plugin
+3. Reactivate plugins one-by-one until SiteZen breaks
+4. The plugin you just activated = the conflict
+
+**Known conflicts:**
+- **Some caching plugins** (WP Rocket, W3 Total Cache) cache SiteZen's hashed CSS too aggressively → clear cache after every push
+- **Optimization plugins** (Autoptimize) may break SiteZen JS → exclude `sitezen-plugin/assets/js/*` from minification
+- **Security plugins** that disable REST API → re-enable for SiteZen routes
+
+## Theme conflict
+
+**Symptoms:** SiteZen Section block renders incorrectly on the frontend.
+
+**Find conflict:**
+1. Switch to Twenty Twenty-Four theme (WP Admin → Appearance → Themes)
+2. View the page → if SiteZen now looks correct, theme was the conflict
+3. Switch back to your theme
+
+**Fixes:**
+- Theme is overriding SiteZen styles → wrap SiteZen with higher specificity selectors in custom CSS
+- Theme adds wrapper divs that constrain width → use `alignfull` on the SiteZen Section
+- Theme blocks REST API for non-admin users → fix in `functions.php`
+
+## Plugin makes admin slow
+
+**Cause:** Other plugins or high-cardinality data (many templates, many CPTs).
+
+**Fixes:**
+1. Optimize WP database (Optimize tables in phpMyAdmin or via WP-Sweep plugin)
+2. Reduce template/CPT count if you have hundreds
+3. Check memory limit (`memory_limit` in `wp-config.php`) — increase to 256M if at 128M
+
+## Recovering from a complete failure
+
+If WordPress admin is completely inaccessible after SiteZen activation:
+
+<Steps>
+  <Step title="Access WordPress files" icon="terminal" title-type="p">
+    Via FTP, file manager (hosting panel), or SSH.
+  </Step>
+
+  <Step title="Rename plugin folder" icon="edit" title-type="p">
+    Rename `wp-content/plugins/sitezen-plugin/` to `wp-content/plugins/sitezen-plugin-OFF/`
+  </Step>
+
+  <Step title="Site recovers" icon="check" title-type="p">
+    WordPress auto-deactivates the plugin since the folder name changed. Admin should now work.
+  </Step>
+
+  <Step title="Delete and re-upload" icon="upload" title-type="p">
+    Delete the `-OFF` folder, upload fresh zip via WP Admin → Plugins → Add New.
+  </Step>
+</Steps>
+
+This is the "nuclear" recovery — works in 99% of WSOD scenarios.
+
+## When to contact support
+
+Include in your message:
+- WordPress version
+- PHP version
+- SiteZen plugin version
+- Active theme name
+- Other active plugins
+- Exact error message (copy-paste, don't paraphrase)
+- Contents of `wp-content/debug.log` (last 30 lines)
+- Contents of `wp-content/sitezen-bootlog.txt` (if exists)
+
+The more context, the faster we can diagnose.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Installing the Plugin" href="/getting-started/installing-plugin" icon="download" horizontal="false">
+    Original install guide.
+  </Card>
+
+  <Card title="Common Issues" href="/troubleshooting/common-issues" icon="help-circle" horizontal="false">
+    Other frequent issues beyond installation.
+  </Card>
+</Columns>

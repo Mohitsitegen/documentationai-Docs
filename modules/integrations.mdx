@@ -1,0 +1,216 @@
+---
+title: Third-Party Integrations
+description: Connect SiteZen forms and pages to Mailchimp, ConvertKit, HubSpot, webhooks, and more.
+---
+
+## What it does
+
+The Integrations module connects SiteZen-built sites to external tools:
+
+- **Email marketing** (Mailchimp, ConvertKit, ActiveCampaign, Brevo, HubSpot)
+- **CRM** (HubSpot, Salesforce, Pipedrive)
+- **Webhooks** (any URL that accepts POST JSON)
+- **Analytics** (Google Analytics 4, GTM, Plausible, Fathom)
+- **Maps** (Google Maps API key for advanced map features)
+- **Captcha** (Google reCAPTCHA v3 for forms)
+
+Once configured, integrations can be wired to forms, pages, or specific blocks.
+
+## Setting up an integration
+
+WP Admin → SiteZen → **Modules → Integrations** → click the integration you want.
+
+Each integration has its own setup flow (typically API key / OAuth).
+
+[SCREENSHOT: Integrations module main page with integration list]
+
+## Mailchimp
+
+### Setup
+<Steps>
+  <Step title="Get a Mailchimp API key" icon="key" title-type="p">
+    Mailchimp → Profile → Extras → API keys → Create A Key. Copy it.
+  </Step>
+
+  <Step title="Add to SiteZen" icon="plus" title-type="p">
+    Integrations → Mailchimp → paste API key → Save.
+  </Step>
+
+  <Step title="Pick default list" icon="check" title-type="p">
+    Choose which Mailchimp list new subscribers go to (you can override per form).
+  </Step>
+</Steps>
+
+### Wire a form to Mailchimp
+1. WP editor → click a form → sidebar → **Integrations** tab
+2. Toggle on **Mailchimp** → pick a list
+3. Map form fields: Email → EMAIL, Name → FNAME, etc.
+4. Save the page
+
+Every form submission now subscribes the user to the chosen Mailchimp list.
+
+### Tag subscribers
+Add tags so you can segment later:
+
+1. Form's integration settings → **Tags** → add tags (e.g. "newsletter", "downloaded-ebook")
+2. New subscribers get these tags in Mailchimp
+
+## ConvertKit
+
+### Setup
+1. ConvertKit → Settings → Advanced → API → copy API Secret
+2. SiteZen → Integrations → ConvertKit → paste → Save
+3. Choose default form ID
+
+### Wire a form
+Same as Mailchimp — form sidebar → Integrations → ConvertKit → pick which ConvertKit form to subscribe to.
+
+## HubSpot
+
+### Setup
+HubSpot connects via OAuth (no API key needed):
+
+1. Integrations → HubSpot → **Connect with HubSpot**
+2. Sign in to HubSpot → authorize SiteZen access
+3. Pick which HubSpot account if you have multiple
+
+### What you can do
+- Create contacts from form submissions
+- Add contacts to lists
+- Trigger workflows in HubSpot
+- Sync custom contact properties
+
+## Webhooks
+
+For any service not in the built-in list, use a custom webhook:
+
+### Setup
+1. Integrations → **Custom Webhook** → Add
+2. **Name**: friendly identifier (e.g. "Zapier Hook")
+3. **URL**: the webhook endpoint you want to POST to
+4. **Method**: POST (default) or PUT
+5. **Headers** (optional): for auth (e.g. `Authorization: Bearer xxx`)
+6. **Payload template** (optional): override default JSON shape
+
+### Default payload
+When a form is submitted, the webhook receives:
+
+```json
+{
+  "form_id": "contact",
+  "site_url": "https://yoursite.com",
+  "page_url": "https://yoursite.com/contact",
+  "submitted_at": "2026-06-03T11:30:00Z",
+  "data": {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "message": "Hello..."
+  }
+}
+```
+
+### Use cases
+- **Zapier / Make / n8n**: chain SiteZen forms into any automation
+- **Slack notifications**: post to a channel on submission
+- **Custom backend**: send to your own API endpoint
+- **CRM not yet integrated**: send to Pipedrive / Salesforce via webhook
+
+## Google reCAPTCHA v3
+
+Protects forms from bots without making users solve puzzles.
+
+### Setup
+<Steps>
+  <Step title="Get reCAPTCHA keys" icon="key" title-type="p">
+    [google.com/recaptcha/admin](https://www.google.com/recaptcha/admin) → Create site → reCAPTCHA v3 → enter your domain.
+  </Step>
+
+  <Step title="Copy Site Key + Secret Key" icon="copy" title-type="p">
+    You get two keys. Both needed.
+  </Step>
+
+  <Step title="Add to SiteZen" icon="plus" title-type="p">
+    Integrations → reCAPTCHA → paste both keys.
+  </Step>
+
+  <Step title="Set score threshold" icon="filter" title-type="p">
+    0.5 default (rejects submissions below this score). Lower = more lenient. Higher = stricter (may block real users).
+  </Step>
+</Steps>
+
+### Wire to forms
+1. Form sidebar → **Anti-spam** → toggle on **reCAPTCHA**
+2. Submissions below the threshold are silently rejected
+
+No user-facing checkbox — runs invisibly. Form just submits or shows "Verification failed" error.
+
+## Google Analytics 4
+
+Track page views and conversions:
+
+### Setup
+1. GA4 → create property → get Measurement ID (`G-XXXXXXX`)
+2. Integrations → Google Analytics → paste ID
+3. Save
+
+Plugin auto-injects GA4 tracking script on all pages.
+
+### Form conversion tracking
+1. Form sidebar → **Analytics** → toggle on **Track conversions**
+2. Set conversion event name (e.g. `form_contact_submit`)
+3. In GA4 → Configure → Events → mark this event as conversion
+
+## Google Tag Manager
+
+If you use GTM for managing multiple tags:
+
+1. Integrations → Google Tag Manager → paste GTM container ID (`GTM-XXXXX`)
+2. Save
+
+Plugin injects GTM script. Manage all your tags via GTM UI instead of touching SiteZen.
+
+## Plausible / Fathom (privacy-friendly analytics)
+
+For sites that need cookie-free analytics (GDPR / privacy):
+
+1. Integrations → Plausible (or Fathom) → enter domain
+2. Save
+
+Lightweight tracking script injected. No cookies, no personal data collected.
+
+## Common issues
+
+**Mailchimp: "Audience not found"**
+The list/audience ID is wrong. Re-select from the dropdown — Mailchimp may have changed the ID.
+
+**ConvertKit: subscriptions not appearing**
+The form's mapping doesn't include the email field. Form sidebar → Integrations → ConvertKit → ensure Email is mapped.
+
+**HubSpot OAuth disconnects after a few days**
+Token expired. Re-authorize in Integrations → HubSpot → Reconnect.
+
+**Webhook returns 500**
+Check the webhook destination's logs. Usually:
+- Authentication issue (wrong API key in headers)
+- Payload shape mismatch (use Payload Template to customize)
+- Rate limit hit on destination
+
+**reCAPTCHA blocking real users**
+Score threshold too high. Lower from 0.5 to 0.3 or 0.2. Check reCAPTCHA admin for typical scores your users get.
+
+**Google Analytics not tracking**
+- Wrong Measurement ID (G-XXXXX format, not UA-XXXXX)
+- Ad blockers stripping the script
+- Test in incognito with ad blockers disabled
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Forms Block" href="/blocks/forms" icon="edit" horizontal="false">
+    Forms that connect to these integrations.
+  </Card>
+
+  <Card title="SMTP Setup" href="/modules/smtp" icon="mail" horizontal="false">
+    Email delivery for form notifications.
+  </Card>
+</Columns>

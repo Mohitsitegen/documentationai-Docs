@@ -1,0 +1,151 @@
+---
+title: Fix Issues Retry Flow
+description: Refine a conversion with natural-language feedback instead of editing HTML by hand.
+---
+
+## What it does
+
+After a conversion, if something looks off in the preview, **Fix Issues** lets you describe what's wrong in plain English. The AI re-runs and makes **surgical fixes only to what you flagged** — leaving everything else untouched.
+
+You can also attach a marked-up screenshot (with arrows / circles) pointing to specific problem areas.
+
+## When to use it
+
+- A specific element looks wrong (font too small, color off, spacing tight)
+- One section converted right but another part is missing
+- You want a small change without redoing the whole conversion from scratch
+- The result is 90% right and you don't want to start over
+
+**Don't use it for:**
+- Major redesigns (run a fresh conversion instead)
+- "Convert a different section" (re-paste the Figma URL and re-convert)
+- Tiny edits you can do in 2 seconds in WordPress (just edit the block directly)
+
+## How to use it
+
+<Steps>
+  <Step title="Open the preview page" icon="eye" title-type="p">
+    After a conversion completes, the preview opens automatically.
+  </Step>
+
+  <Step title="Click 'Fix Issues'" icon="refresh-cw" title-type="p">
+    Button in the top-right of the preview page.
+  </Step>
+
+  <Step title="Describe the problem" icon="edit" title-type="p">
+    Type what's wrong in plain language. Be specific — "the heading should be bigger" is OK but "the heading 'Why Choose Us' should be 48px and bold" is better.
+  </Step>
+
+  <Step title="(Optional) Attach a marked-up screenshot" icon="image" title-type="p">
+    Take a screenshot of the preview, use any tool (Snipping Tool, Skitch, even Paint) to draw arrows/circles pointing to the issues. Upload it.
+  </Step>
+
+  <Step title="Apply fixes" icon="check" title-type="p">
+    Click **Apply Fixes**. The AI re-runs (~30-60 seconds) and updates the preview.
+  </Step>
+</Steps>
+
+[SCREENSHOT: Fix Issues dialog with feedback text and marked-up image]
+
+## What gets changed vs preserved
+
+The AI is told to make **only the changes you requested**. Everything else stays exactly as it was:
+
+- **Mentioned in feedback**: changed
+- **NOT mentioned in feedback**: stays identical (same classes, styles, text, structure)
+
+So if you say "make the heading bigger", the AI:
+- ✅ Changes the heading size
+- ❌ Doesn't change the heading color, font, position
+- ❌ Doesn't touch any other element on the page
+
+This makes Fix Issues safe to use even on near-perfect conversions.
+
+## Writing effective feedback
+
+### Good feedback examples
+- "The 'Get Started' button should be navy blue (#1e3a8a) instead of black"
+- "The hero image is too small on mobile — make it full-width"
+- "The pricing cards should have more padding inside (~32px)"
+- "The second tab content is missing — should show 'Components' info from Figma"
+
+### Less effective feedback
+- "Make it better" (too vague — AI guesses)
+- "Fix everything" (too broad — invites unwanted changes)
+- "Change the layout" (too sweeping — better to run a fresh conversion)
+
+### Use the marked-up image
+For visual issues that are hard to describe in words, the image saves time:
+- Draw a **red circle** around what's wrong
+- Add a **text label** explaining the fix ("make this 24px")
+- Save and upload
+
+The AI sees the markup and applies fixes to those specific elements.
+
+[SCREENSHOT: Example of a well-marked-up screenshot with arrows and labels]
+
+## How many fixes can you stack
+
+Unlimited. After applying fixes, you can:
+- Review the new preview
+- If still imperfect, click **Fix Issues** again with new feedback
+- Iterate until perfect
+
+Each retry counts as **1 section against your monthly cap**, so use them deliberately.
+
+## Cost per retry
+
+Same as a fresh conversion — uses the same Anthropic API call. ~$0.43 per retry at our cost.
+
+If you're on a metered plan, each retry counts towards your monthly section cap.
+
+## When to give up and re-convert
+
+If you've done 3+ Fix Issues retries and it's still not right:
+- Run a fresh conversion from scratch (start over)
+- Use a cleaner Figma source
+- Provide a clearer screenshot
+- Sometimes the AI just can't get one specific pattern right — better to use [Fallback Custom HTML](/advanced/fallback-html) for that element
+
+## Frontend vs preview
+
+Fix Issues works on the **preview** (before pushing to WordPress). Once you push, the section is in WordPress — further edits happen there using the Gutenberg block editor, not Fix Issues.
+
+If you push, realize something's wrong, and want to retry:
+1. Go back to the History view on the platform
+2. Find that conversion
+3. Click "Open" — preview re-opens
+4. Use Fix Issues → re-push (will overwrite or create new page depending on push mode)
+
+## Common issues
+
+**"Apply Fixes" button does nothing**
+- Feedback field is empty (must have text)
+- Connection issue — check internet, refresh, retry
+
+**Fix made unwanted changes**
+The feedback was too broad. Be more specific OR add "DO NOT change anything else, only fix [X]" explicitly.
+
+**Fix didn't change anything**
+The AI couldn't understand the request. Try:
+- Rewording more specifically
+- Adding a marked-up screenshot
+- Pointing at specific Figma values ("the color should be #FF0000, not the current orange")
+
+**Marked-up image not loading**
+File too large (>5MB) or wrong format. Use PNG/JPG under 2MB.
+
+**Retry timed out (>60s)**
+The fix request is too complex for the time limit. Simplify the request, or make it in 2-3 smaller iterations.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Your First Conversion" href="/getting-started/first-conversion" icon="zap" horizontal="false">
+    The full conversion flow including the preview step.
+  </Card>
+
+  <Card title="History View" href="/advanced/history" icon="clock" horizontal="false">
+    Find past conversions to re-open and refine.
+  </Card>
+</Columns>

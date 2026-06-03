@@ -1,0 +1,137 @@
+---
+title: Push Targets — Page, Template, CPT
+description: Where converted sections can land — and which target to pick for what.
+---
+
+## What it does
+
+Before you push a conversion, SiteZen asks **"Where should this section land?"**. The answer determines what kind of WordPress entity gets created.
+
+Three targets:
+
+| Target | Creates a... | When to use |
+|---|---|---|
+| **Page** | WordPress page | One-off content for visitors to view |
+| **SiteZen Template** | Reusable template post | Headers, footers, tab content used multiple places |
+| **CPT (Post Type)** | Custom post type entry | Items in a bucket (team members, case studies, etc.) |
+
+## Page push
+
+### What happens
+- A WordPress page (or appended block on an existing page) is created
+- Lives at a URL like `/section/` or your chosen slug
+- Shows in WP Admin → Pages
+- Public and crawlable by search engines
+
+### Two sub-modes
+
+**New page**
+- Creates a brand new page
+- Name auto-suggested from your section name
+- Becomes the only content on the page
+
+**Existing page**
+- Pick from a dropdown of your WordPress pages
+- Two strategies:
+  - **Append**: adds to the END of the page (default, safe)
+  - **Replace block N**: swaps a specific existing SiteZen Section block
+
+[SCREENSHOT: Page push options dialog]
+
+### When to pick Page
+- Building out a new page for visitors
+- Adding a section to an existing page
+- Standalone content that doesn't need to be reused
+
+## SiteZen Template push
+
+### What happens
+- A template post (`sz_template` CPT) is created
+- Lives in WP Admin → SiteZen → Templates
+- NOT publicly viewable on its own URL
+- Referenced by Tabs, Accordions, Headers, Footers, etc.
+
+### Template types you can push to
+| Type | Where it's used |
+|---|---|
+| Header | Site-wide top navigation |
+| Footer | Site-wide footer |
+| Tab | Tab panel content |
+| Accordion body | Accordion item content |
+| Slider | Single slide in a slider |
+| Single (CPT) | Detail page layout for a custom post type |
+| Menu | Reusable nav menu |
+
+### When to pick Template
+- Designing a header/footer for your site
+- Building tab content you'll reuse across pages
+- Creating the detail-page layout for a CPT (e.g. what "single team member" page looks like)
+
+See [Templates Overview](/templates/overview) for the full guide.
+
+## CPT push
+
+### What happens
+- A custom post type is created (if not already) — e.g. "Case Studies"
+- A new post is created inside that CPT — e.g. "Acme Corp Case Study"
+- Lives at `/case-studies/acme-corp/` (or your chosen slug)
+- Adds to WP Admin sidebar as a new menu item
+- Listable as a query in a Post Listings block elsewhere
+
+### Required info
+- **CPT slug** (e.g. `case-studies`) — what shows in URLs
+- **CPT label** (e.g. "Case Studies") — what shows in WP admin
+- **Post title** (e.g. "Acme Corp") — this specific entry
+- **Post ID** (optional) — to update an existing entry instead of creating new
+
+### When to pick CPT
+- Adding one entry to a list (team member, case study, blog post)
+- The page is "one of many similar things" rather than unique
+- You want it queryable by a Post Listings block on another page
+
+## How push targets work together
+
+A common workflow uses all three:
+
+1. **Header & Footer** → push as Templates (set once, used site-wide)
+2. **Homepage hero, About page, Pricing page** → push as Pages
+3. **Each team member** → push as CPT entries to a "Team" CPT
+4. **The "Meet the Team" page** → push as a Page containing a Post Listings block pointing to the Team CPT
+5. **Each tab on the Pricing page** → push as Templates so they're editable centrally
+
+Result: clean, maintainable WordPress site with reusable building blocks.
+
+## Switching targets
+
+Each push is independent — you can mix targets freely. The Convert page lets you pick a different target for every conversion.
+
+## Common issues
+
+**Page push: "Page already exists" warning**
+Pick "Append" or "Replace block" mode instead of "New page" if you want to update an existing page. Or change the section name to create a differently-named new page.
+
+**Template push: "Template type required"**
+Pick the template type from the dropdown before pushing. Required for templates to be discoverable in pickers later.
+
+**CPT push: "Slug invalid"**
+CPT slugs must be lowercase, alphanumeric, hyphens only. Use `case-studies` not "Case Studies" or `case_studies`.
+
+**CPT push creates duplicate posts**
+You're not passing `cptPostId` to update an existing post. To update, set the Post ID field to the existing post's ID.
+
+**Pushed but can't find the result**
+- Page → WP Admin → Pages
+- Template → WP Admin → SiteZen → Templates
+- CPT → WP Admin → new sidebar item matching your CPT label
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Templates Overview" href="/templates/overview" icon="copy" horizontal="false">
+    Deep dive on template usage.
+  </Card>
+
+  <Card title="Post Listings" href="/blocks/post-listings" icon="database" horizontal="false">
+    Display CPT entries as dynamic card grids.
+  </Card>
+</Columns>

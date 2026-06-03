@@ -1,0 +1,159 @@
+---
+title: Frame Detection (Batch Conversion)
+description: Convert an entire Figma page of sections in one go instead of one by one.
+---
+
+## What it does
+
+Frame Detection scans your **entire Figma page** for convertible sections and shows them as a list. You pick which ones to convert in one batch instead of pasting URLs one-by-one.
+
+Saves significant time when building out a full website (e.g. 8-section landing page = 8 conversions in one batch vs 8 separate manual flows).
+
+## When to use it
+
+- Building a new full-site site from a complete Figma design
+- Migrating an existing Figma design to WordPress at scale
+- Comparing multiple section options quickly
+
+## How to trigger it
+
+On the Convert page, click **"Or detect all frames..."** (link below the Convert button).
+
+[SCREENSHOT: Convert page with "Or detect all frames" link highlighted]
+
+## What gets detected
+
+SiteZen scans the Figma file's pages and lists:
+
+- **Top-level frames** (the big sections — e.g. "Home Page", "About Page")
+- **Inner sections of tall pages** — if a frame is 2500px+ tall, its direct children are listed separately (so a 6000px "Home" page becomes 8-12 detected sub-sections)
+- **Filtered for size** — frames under 200×80px are excluded (too small to be sections)
+
+[SCREENSHOT: Detected sections list]
+
+## What the list shows per section
+
+| Column | Meaning |
+|---|---|
+| **Name** | Figma frame name (e.g. "Home > Hero", "About > Team") |
+| **Size** | Width × Height in pixels |
+| **Type** | FRAME, COMPONENT, SECTION (Figma node type) |
+| **Background** | Effective bg color (own fill or inherited) |
+| **Convert** | Checkbox to include in batch |
+
+## Running a batch conversion
+
+<Steps>
+  <Step title="Detect frames" icon="search" title-type="p">
+    Click "Or detect all frames..." → list populates with all eligible sections.
+  </Step>
+
+  <Step title="Pick which to convert" icon="check-square" title-type="p">
+    Check the boxes for sections you want. Uncheck the ones you'll skip.
+  </Step>
+
+  <Step title="Pick a shared screenshot strategy" icon="image" title-type="p">
+    Two options:
+    - **Auto-screenshot** — SiteZen exports each frame from Figma as a PNG (no upload needed per section)
+    - **Per-section upload** — you upload a screenshot for each (better quality, more work)
+  </Step>
+
+  <Step title="Pick a shared push target" icon="map-pin" title-type="p">
+    All sections in the batch go to the same destination — usually "New page each" or "Append to one page in order".
+  </Step>
+
+  <Step title="Start batch" icon="play" title-type="p">
+    Click **Convert all**. SiteZen processes each in sequence.
+  </Step>
+</Steps>
+
+## How long does it take
+
+Each section takes the same ~30-60 seconds as a single conversion. A batch of 10 sections takes ~5-10 minutes total.
+
+You can leave the page during processing — progress is saved. Come back to check the results.
+
+## Reviewing results
+
+After the batch finishes, you'll see a results page with:
+
+- ✅ Successfully converted (with thumbnail + push link)
+- ❌ Failed (with error message)
+- ⚠️ Converted with warnings (e.g. "missing text")
+
+Click any result to:
+- Preview the conversion
+- Use Fix Issues to refine
+- Push to WordPress
+- Open in WordPress if already pushed
+
+[SCREENSHOT: Batch results page with successes and failures]
+
+## Auto-push during batch
+
+You can configure the batch to **auto-push successful conversions** without reviewing each:
+
+- Pick the push target before starting
+- Toggle **Auto-push on success**
+- All successful sections push immediately
+- Failures stay in the results page for review
+
+This makes "convert + push a whole site" a one-click flow.
+
+## Cost considerations
+
+Each section in the batch counts as one section against your plan cap.
+
+A 12-section site = 12 sections (~$5.16 at our cost, $7.74 at 1.5× markup).
+
+Use **frame detection's preview** to estimate how many sections before starting — if it's more than your remaining cap, deselect lower-priority sections.
+
+## Smart caching
+
+If the same Figma file has been converted recently, SiteZen reuses cached data:
+
+- File tree (fetched once, valid for 5 min)
+- Image renders (fetched once, valid until file changes)
+- System prompt (cached at Anthropic, 5 min warm)
+
+Result: batches after the first are ~30% faster than serial single conversions.
+
+## Limitations
+
+- **Max 20 sections per batch** (Vercel function limits)
+- **Each section ≤60 seconds** (single section timeout)
+- **No cross-section coordination** — each section converts independently (e.g. won't unify color scheme across sections automatically)
+- **Sequential, not parallel** — sections process one at a time to avoid rate limits
+
+## Common issues
+
+**Frame detection returns "0 top-level frames"**
+- File has no eligible frames (all too small)
+- Figma token doesn't have access to this file
+- File is empty (no design content)
+
+**Some sections detected but not the ones you want**
+- Wanted section is < 200×80px (excluded as too small)
+- Section is nested deeper than 3 levels (detection depth limit)
+- Use single conversion mode for those specific sections
+
+**Batch conversion stops mid-way**
+- One section took too long → Vercel function timed out
+- Hit Anthropic rate limit → wait 60s, batch resumes
+
+**"Auto-push" succeeded but pages are blank**
+- Plugin not active on target site
+- Connection key invalid
+- See [Pushing to WordPress troubleshooting](/getting-started/push-to-wordpress#common-issues)
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Your First Conversion" href="/getting-started/first-conversion" icon="zap" horizontal="false">
+    Single-section conversion (when batch is overkill).
+  </Card>
+
+  <Card title="Push Targets" href="/advanced/push-targets" icon="map-pin" horizontal="false">
+    Pick the right destination for batch results.
+  </Card>
+</Columns>
