@@ -1,0 +1,152 @@
+---
+title: Get Your Figma Access Token
+description: Generate a personal access token so SiteZen can read your Figma files.
+---
+
+## What it does
+
+The Figma access token lets SiteZen read your Figma file's:
+
+- Text content (so it ends up verbatim in your WordPress page)
+- Colors and fonts (exact values, not approximations)
+- Images and assets (auto-downloaded into WordPress media library)
+- Layout structure (nested frames, auto-layout, constraints)
+
+Without a token, SiteZen can only see your screenshot — it would have to guess at values like exact hex codes, font sizes, and image URLs. With the token, those come straight from Figma.
+
+## When to do this
+
+Once per Figma account. The token works for every Figma file in your account, so you don't generate a new one per project.
+
+<Callout kind="info" collapsed="false">
+  Your token is stored **locally in your browser only**. SiteZen never sends it to our servers. The token gives the platform read-only access to your Figma files, scoped to your account.
+</Callout>
+
+## Step-by-step
+
+### 1. Open Figma settings
+
+<Steps>
+  <Step title="Sign in to Figma" icon="figma" title-type="p">
+    Go to [figma.com](https://www.figma.com) and sign in.
+  </Step>
+
+  <Step title="Open settings" icon="settings" title-type="p">
+    Click your **profile icon** in the top-right → **Settings**.
+  </Step>
+
+  <Step title="Find Personal Access Tokens" icon="key" title-type="p">
+    In the left sidebar, click **Account** tab → scroll down to **Personal access tokens**.
+  </Step>
+</Steps>
+
+Direct link: [figma.com/settings](https://www.figma.com/settings) (jumps you to the Settings → Account tab).
+
+[SCREENSHOT: Figma Settings page showing Personal access tokens section]
+
+### 2. Generate a new token
+
+<Steps>
+  <Step title="Click Generate new token" icon="plus" title-type="p">
+    The "Generate new token" button is just below the heading.
+  </Step>
+
+  <Step title="Name the token" icon="edit" title-type="p">
+    Give it a recognizable name like **SiteZen** or **SiteZen Platform**. This helps you remember what the token is for later.
+  </Step>
+
+  <Step title="Set expiration (optional)" icon="clock" title-type="p">
+    Pick how long the token stays valid:
+    - **No expiration** — easiest, never have to regenerate
+    - **30 / 60 / 90 days** — more secure, requires renewal
+
+    For most users, "No expiration" is fine since the token is browser-local and you can revoke it anytime.
+  </Step>
+
+  <Step title="Set scopes" icon="lock" title-type="p">
+    SiteZen needs:
+    - **File content**: Read
+    - **Dev resources**: Read (optional, improves quality on dev-mode designs)
+
+    Leave the rest as "No access".
+  </Step>
+
+  <Step title="Generate" icon="check" title-type="p">
+    Click **Generate token**.
+  </Step>
+
+  <Step title="Copy immediately" icon="copy" title-type="p">
+    Figma shows the token **once only**. Copy it before closing the dialog. It looks like `figd_abc123def456...`.
+  </Step>
+</Steps>
+
+[SCREENSHOT: Figma "Generate new token" dialog with SiteZen named and scopes set]
+
+<Callout kind="alert" collapsed="false">
+  If you close the dialog without copying, you'll have to delete the token and generate a new one. Figma never re-displays a token after creation.
+</Callout>
+
+### 3. Paste it into SiteZen
+
+<Steps>
+  <Step title="Open the Convert page" icon="external-link" title-type="p">
+    Go to the SiteZen platform → **Convert** page in the left sidebar.
+  </Step>
+
+  <Step title="Find the token field" icon="search" title-type="p">
+    Look for the **Figma access token** field in the top right area.
+  </Step>
+
+  <Step title="Paste" icon="clipboard" title-type="p">
+    Paste your token. SiteZen saves it locally in your browser immediately.
+  </Step>
+</Steps>
+
+You'll see **"Stored locally in your browser"** under the field — that's confirmation it's saved.
+
+[SCREENSHOT: SiteZen Convert page with Figma access token pasted]
+
+## Where the token is stored
+
+Only in your browser's `localStorage`. Specifically:
+
+- It does NOT get sent to SiteZen's servers
+- It does NOT get included in conversions or logs
+- It IS sent directly from your browser to Figma's API (via SiteZen's serverless function as a proxy, so Figma doesn't block you with CORS)
+
+If you clear browser data or switch browsers, you'll need to paste the token again.
+
+## Revoking the token
+
+If you want to invalidate the token (e.g. you lost the device with it):
+
+1. Figma → Settings → Personal access tokens
+2. Find **SiteZen** in the list
+3. Click **Revoke**
+
+The token becomes useless immediately. Generate a new one and re-paste in SiteZen.
+
+## Common issues
+
+**"Invalid Figma token" error during conversion**
+- Token was revoked or expired (regenerate)
+- Token was copied incorrectly (re-copy and re-paste, no extra spaces)
+- Token doesn't have **File content: Read** scope (regenerate with correct scopes)
+
+**"Token works for one file but not another"**
+The Figma file is in a workspace your account doesn't have access to. Ask the file owner to invite you, or convert from a copy in your own workspace.
+
+**"Token field is empty when I reload the page"**
+Browser cleared localStorage (private/incognito mode, or browser cleanup tool). Re-paste the token. To persist between sessions, use a regular browser window.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Your First Conversion" href="/getting-started/first-conversion" icon="zap" horizontal="false">
+    Now that you have your token, run your first conversion.
+  </Card>
+
+  <Card title="Connect Plugin to Platform" href="/getting-started/connect-plugin" icon="link" horizontal="false">
+    If you haven't already linked your WordPress site, do that first.
+  </Card>
+</Columns>

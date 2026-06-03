@@ -1,58 +1,161 @@
 ---
-title: Quickstart
-description: Minimal steps to customize this sample starter kit.
+title: Quick Start
+description: From zero to your first SiteZen conversion in 5 minutes.
 ---
-## Overview
 
-<Callout kind="alert" collapsed="false">
-  This site ships with placeholder content. Use this quickstart to replace it with your real product docs.
+## What you'll do in this guide
+
+By the end of this 5-minute walkthrough, you'll have:
+
+1. The SiteZen plugin installed on your WordPress site
+2. Your WordPress site connected to the SiteZen platform
+3. Your Figma access token saved
+4. Your first Figma section converted and live on WordPress
+
+<Callout kind="info" collapsed="false">
+  Already done some steps? Jump straight to [your first conversion](/getting-started/first-conversion).
 </Callout>
 
-## 1. Update a page
+## Before you start
+
+Make sure you have:
+
+- A WordPress site you can install plugins on (admin access)
+- A Figma account with the file you want to convert
+- A SiteZen platform account ([sign up here](https://sitezen-platform.vercel.app))
+
+## Step 1: Install the SiteZen plugin
 
 <Steps>
-  <Step title="Edit introduction" icon="edit" title-type="p">
-    Replace the sample introduction with a concise overview of your product and the key actions you want new users to take first.
+  <Step title="Download the plugin zip" icon="download" title-type="p">
+    Get the latest `sitezen-plugin.zip` from your SiteZen account dashboard.
   </Step>
 
-  <Step title="Preview your change" icon="monitor" title-type="p">
-    Use your dashboard board editor to confirm the updated introduction looks and reads as expected.
+  <Step title="Upload to WordPress" icon="upload" title-type="p">
+    In WP Admin → **Plugins → Add New → Upload Plugin** → choose `sitezen-plugin.zip` → **Install Now**.
+  </Step>
+
+  <Step title="Activate" icon="check" title-type="p">
+    Click **Activate** on the install success screen.
   </Step>
 </Steps>
 
-## 2. Add a new page
+[SCREENSHOT: WordPress plugin upload page with sitezen-plugin.zip selected]
+
+Detailed guide: [Installing the plugin](/getting-started/installing-plugin)
+
+## Step 2: Get your connection key
+
+After activating the plugin, WordPress will show a **SiteZen** menu item in your admin sidebar.
 
 <Steps>
-  <Step title="Add a page" icon="file-text" title-type="p">
-    Create a new `page` by clicking on the + button from the left navigation bar of dashboard. If you are using git, create the .mdx file and add to navigation bar using documentation.json
+  <Step title="Open SiteZen settings" icon="settings" title-type="p">
+    WP Admin → **SiteZen → Settings**.
+  </Step>
+
+  <Step title="Copy the Connection Key" icon="copy" title-type="p">
+    A unique key was auto-generated on activation. Copy it.
   </Step>
 </Steps>
 
-## Example onboarding flow (replace with yours)
+[SCREENSHOT: SiteZen Settings page showing the connection key with a Copy button]
 
-1. Sign up for an account and verify your email.
+## Step 3: Connect WordPress to the platform
 
-2. Create your first workspace, project, or environment.
+<Steps>
+  <Step title="Open the SiteZen platform" icon="external-link" title-type="p">
+    Go to [sitezen-platform.vercel.app](https://sitezen-platform.vercel.app) and sign in.
+  </Step>
 
-3. Add one integration or data source to connect your existing tools.
+  <Step title="Add your WordPress site" icon="plus" title-type="p">
+    Click **Sites → Add Site**. Enter:
+    - **Site URL**: your WordPress URL (e.g. `https://yoursite.com`)
+    - **Connection Key**: the key you copied from WP Admin
+  </Step>
 
-4. Complete a guided action (for example, run your first job or publish your first resource).
+  <Step title="Save and verify" icon="check" title-type="p">
+    Click **Save**. The platform tests the connection — you'll see a green checkmark if successful.
+  </Step>
+</Steps>
 
-5. Invite a teammate and assign a basic role or permission.
+[SCREENSHOT: Platform Sites page with new site form]
 
-## 3. Connect API Reference (optional)
+Detailed guide: [Connecting plugin to platform](/getting-started/connect-plugin)
 
-If you have an API, replace `openapi.yaml` with your real OpenAPI file. If you do not need an API reference, remove that tab either from dashboard or  `documentation.json`.
+## Step 4: Add your Figma access token
 
-## Next steps
+SiteZen needs read access to your Figma files to extract text, colors, and images.
+
+<Steps>
+  <Step title="Generate a Figma token" icon="key" title-type="p">
+    Go to [figma.com/settings](https://www.figma.com/settings) → **Personal Access Tokens** → **Generate new token**. Name it "SiteZen" and copy the token.
+  </Step>
+
+  <Step title="Paste it in SiteZen" icon="clipboard" title-type="p">
+    Back in the platform → **Convert** page → paste the token in the **Figma access token** field.
+  </Step>
+</Steps>
+
+The token is stored locally in your browser only — never sent to our servers.
+
+Detailed guide: [Getting your Figma access token](/getting-started/figma-token)
+
+## Step 5: Convert your first section
+
+<Steps>
+  <Step title="Copy a section URL from Figma" icon="link" title-type="p">
+    In Figma, right-click the section frame you want to convert → **Copy link to selection**.
+  </Step>
+
+  <Step title="Paste into SiteZen" icon="clipboard" title-type="p">
+    On the **Convert** page, paste the URL into **Figma section URL**.
+  </Step>
+
+  <Step title="Upload a screenshot" icon="image" title-type="p">
+    Take a screenshot of just that section in Figma (Cmd/Ctrl+Shift+4 or use Figma's export). Drop it into the **Section screenshot** area.
+  </Step>
+
+  <Step title="Pick where it lands" icon="map-pin" title-type="p">
+    Choose **Page** (new WordPress page) for your first try. Leave **New page** selected.
+  </Step>
+
+  <Step title="Convert" icon="zap" title-type="p">
+    Click **Convert this section**. Wait ~30-60 seconds.
+  </Step>
+
+  <Step title="Push to WordPress" icon="upload" title-type="p">
+    When the preview loads, click **Push to WordPress** in the top right.
+  </Step>
+</Steps>
+
+[SCREENSHOT: Convert page filled out with all fields]
+
+Detailed guide: [Your first conversion](/getting-started/first-conversion)
+
+## Step 6: View your live page
+
+Click the WordPress page URL that appears in the push success notice. You'll see your Figma design — live, responsive, and editable.
+
+[SCREENSHOT: Converted section live on a WordPress page]
+
+## Congrats — you're done
+
+You've completed the full SiteZen workflow. From here:
 
 <Columns cols="2">
-  <Card title="Core Concepts" href="/concepts" icon="layers" horizontal="false">
-    Keep the mental model simple and easy to scan.
+  <Card title="Learn about block features" href="/blocks/section-block" icon="layers" horizontal="false">
+    Explore tabs, accordions, sliders, pricing tables, and more.
   </Card>
 
-  <Card title="Authentication" href="/authentication" icon="lock" horizontal="false">
-    Add your real auth flows and security notes.
+  <Card title="Use templates" href="/templates/overview" icon="copy" horizontal="false">
+    Save reusable headers, footers, and tab content as templates.
   </Card>
 </Columns>
 
+## Troubleshooting
+
+**Plugin won't activate?** See [Plugin installation issues](/troubleshooting/plugin-activation).
+
+**Conversion timed out?** See [Conversion errors](/troubleshooting/conversion-errors).
+
+**Site connection failed?** Make sure your WordPress site is publicly reachable and the connection key is pasted exactly (no spaces).

@@ -1,0 +1,97 @@
+---
+title: Installing the Plugin
+description: Step-by-step guide to install the SiteZen plugin on your WordPress site.
+---
+
+## What it does
+
+The SiteZen plugin is a WordPress plugin that:
+
+- Registers the **SiteZen Section** Gutenberg block
+- Handles all interactive components (tabs, accordions, sliders, etc.) on the frontend AND in the editor
+- Provides REST endpoints so the SiteZen platform can push converted designs to your site
+- Manages reusable templates (headers, footers, tab content, accordion bodies)
+
+Without the plugin installed, the platform has nowhere to push your converted designs.
+
+## When to install it
+
+Install it once per WordPress site you want to use with SiteZen. If you have 5 client sites, install on all 5.
+
+## Before you start
+
+- WordPress 6.3+ installed and running
+- Admin access to the WordPress dashboard
+- The `sitezen-plugin.zip` file downloaded (from your SiteZen account → Downloads)
+- About 2 minutes
+
+## Step-by-step
+
+<Steps>
+  <Step title="Open the Plugins page" icon="grid" title-type="p">
+    In WordPress admin, go to **Plugins → Add New**.
+  </Step>
+
+  <Step title="Click Upload Plugin" icon="upload" title-type="p">
+    At the top of the page, click the **Upload Plugin** button.
+  </Step>
+
+  <Step title="Choose the zip file" icon="file" title-type="p">
+    Click **Choose File** → select `sitezen-plugin.zip` from wherever you saved it.
+  </Step>
+
+  <Step title="Install" icon="download" title-type="p">
+    Click **Install Now**. WordPress unpacks the plugin (~5 seconds).
+  </Step>
+
+  <Step title="Activate" icon="check" title-type="p">
+    On the success screen, click **Activate Plugin**.
+  </Step>
+</Steps>
+
+[SCREENSHOT: WordPress Plugins → Add New → Upload Plugin page with sitezen-plugin.zip selected]
+
+## What happens after activation
+
+- A new **SiteZen** menu item appears in the WordPress admin sidebar
+- A unique **connection key** is auto-generated for your site (you'll need this in the next step)
+- The **SiteZen Section** block is registered and available in the Gutenberg editor
+- Default templates (none yet) and CPT registrations are initialized
+
+[SCREENSHOT: WordPress sidebar showing the new SiteZen menu item]
+
+## Verifying it worked
+
+Check that:
+
+- WP Admin → **Plugins** shows **SiteZen – Figma to Blocks** with an **Active** badge
+- WP Admin → **SiteZen → Settings** opens without errors
+- WP Admin → **Pages → Add New** → click the **+** button → search for "SiteZen" → the **SiteZen Section** block should appear
+
+If all three work, you're good. Move to [Connecting plugin to platform](/getting-started/connect-plugin).
+
+## Common issues
+
+**"Plugin file does not exist" after upload**
+The previous plugin install left orphan files. Open WordPress File Manager (or FTP), navigate to `wp-content/plugins/`, delete any folder starting with `sitezen-plugin`, then re-upload the zip.
+
+**"Plugin could not be activated because it triggered a fatal error"**
+Check that your WordPress version is 6.3 or higher and PHP version is 7.4 or higher. If both are correct, contact support with a screenshot of the error.
+
+**Plugin uploads but doesn't appear in the plugin list**
+Hard-refresh the Plugins page (Ctrl+Shift+R). If still missing, the zip may have uploaded incorrectly — re-download and try again.
+
+**Plugin activates but no SiteZen menu appears**
+Try deactivating and reactivating. If the menu still doesn't appear, check WordPress error logs (`wp-content/debug.log`) and contact support.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Connect to Platform" href="/getting-started/connect-plugin" icon="link" horizontal="false">
+    Link your WordPress site to the SiteZen platform with a connection key.
+  </Card>
+
+  <Card title="Plugin Settings" href="/plugin/settings" icon="settings" horizontal="false">
+    Configure the plugin's options, modules, and integrations.
+  </Card>
+</Columns>

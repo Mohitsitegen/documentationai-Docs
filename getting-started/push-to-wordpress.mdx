@@ -1,0 +1,178 @@
+---
+title: Pushing to WordPress
+description: How to push converted sections to your WordPress site — new pages, existing pages, and beyond.
+---
+
+## What "Push to WordPress" does
+
+When you push a converted section, SiteZen:
+
+1. Sends the generated HTML to your WordPress site via the plugin's REST API
+2. Wraps it as a **SiteZen Section block** (a custom Gutenberg block)
+3. Creates a new page OR appends/replaces content on an existing page
+4. Returns the URL where the page is live
+
+This step is what turns "a preview in my browser" into "a real WordPress page my visitors can see".
+
+## When to push
+
+After every successful conversion, when you're happy with the preview. If the preview looks wrong, use [Fix Issues](/advanced/fix-issues) FIRST to refine — pushing locks in the current version.
+
+## Where can you push?
+
+Three destinations, picked on the Convert page under **Where should this section land?**
+
+<Columns cols="3">
+  <Card title="Page" icon="file" horizontal="false">
+    A regular WordPress page (the most common choice).
+  </Card>
+
+  <Card title="SiteZen Template" icon="copy" horizontal="false">
+    A reusable template (header, footer, tab content, accordion body, etc.).
+  </Card>
+
+  <Card title="CPT" icon="database" horizontal="false">
+    A post inside a Custom Post Type bucket (e.g. "Team Members", "Case Studies").
+  </Card>
+</Columns>
+
+Full details: [Push Targets](/advanced/push-targets).
+
+## Page push — the most common path
+
+This guide focuses on **Page** pushes. The other two are covered separately.
+
+### Page mode options
+
+After picking **Page**, choose one of two sub-modes:
+
+#### New page
+Creates a brand new WordPress page. You name it (e.g. "About Us"), SiteZen builds it from scratch with your converted section as the only content.
+
+Best for: starting a new site, adding fresh pages to an existing site.
+
+#### Existing page
+Adds the converted section to a page you've already created. Two strategies:
+
+- **Append**: adds the section to the END of the page (existing content stays)
+- **Replace block**: swaps out one existing SiteZen Section block on the page
+
+[SCREENSHOT: Page push options — New page vs Existing page toggle]
+
+## Step-by-step: Pushing to a new page
+
+<Steps>
+  <Step title="Verify the preview looks right" icon="eye" title-type="p">
+    On the preview page, check Desktop / Tablet / Mobile views. If something's off, use **Fix Issues** before pushing.
+  </Step>
+
+  <Step title="Click Push to WordPress" icon="upload" title-type="p">
+    The button is in the top-right of the preview page.
+  </Step>
+
+  <Step title="Confirm the target" icon="map-pin" title-type="p">
+    A dialog confirms:
+    - **Site**: which WordPress site receives the push
+    - **Page name**: editable, defaults to your section name
+    - **Push mode**: New page (default)
+  </Step>
+
+  <Step title="Click Push" icon="check" title-type="p">
+    SiteZen pushes the HTML. Takes ~3-8 seconds.
+  </Step>
+
+  <Step title="Open the live page" icon="external-link" title-type="p">
+    Success notice shows the page URL. Click to open it in a new tab.
+  </Step>
+</Steps>
+
+[SCREENSHOT: Push to WordPress confirmation dialog]
+
+## Step-by-step: Pushing to an existing page
+
+<Steps>
+  <Step title="Pick Existing page" icon="file" title-type="p">
+    On the Convert page (BEFORE clicking Convert), pick **Existing page** and select which page from the dropdown.
+  </Step>
+
+  <Step title="Run the conversion" icon="zap" title-type="p">
+    Convert as normal.
+  </Step>
+
+  <Step title="In the preview, choose Append or Replace" icon="check" title-type="p">
+    - **Append**: appears at the end of the existing page
+    - **Replace block #N**: swaps a specific existing SiteZen Section block
+  </Step>
+
+  <Step title="Push" icon="upload" title-type="p">
+    The section is added/replaced. Existing content (other blocks) stays untouched.
+  </Step>
+</Steps>
+
+<Callout kind="info" collapsed="false">
+  "Append" is the default and safest mode. It never deletes existing content. Only use "Replace block" if you specifically want to swap one section.
+</Callout>
+
+## What happens on WordPress's side
+
+Behind the scenes, the plugin:
+
+1. Receives the HTML from the platform
+2. Validates the connection key
+3. Optimizes images (extracts external image URLs, downloads them to WordPress media library)
+4. Generates a hashed CSS file from inline `<style>` blocks (cached forever — fast page loads)
+5. Wraps the HTML as a `<!-- wp:sitezen/section -->` Gutenberg block
+6. Creates the WordPress page (or updates an existing one)
+7. Flushes permalinks if needed (for CPTs)
+
+The whole process is wrapped in a database transaction — if anything fails, nothing changes.
+
+## Editing pushed content
+
+Every pushed section is fully editable in WordPress:
+
+<Steps>
+  <Step title="Open the page in WP editor" icon="edit" title-type="p">
+    WP Admin → **Pages** → click the page → **Edit**.
+  </Step>
+
+  <Step title="Click any element" icon="cursor" title-type="p">
+    Click any heading, paragraph, button, image, etc. The right sidebar shows editing controls specific to that element.
+  </Step>
+
+  <Step title="Edit text, colors, sizes" icon="type" title-type="p">
+    Use the sidebar controls to change content. Changes save with the page.
+  </Step>
+</Steps>
+
+You can also use Gutenberg's standard block tools — duplicate, move, delete blocks individually.
+
+## Common issues
+
+**Push fails with "401 Unauthorized"**
+Connection key is wrong or expired. Re-copy from WP Admin → SiteZen → Settings → re-save in platform → Sites.
+
+**Push succeeds but page is blank in WordPress**
+- Page exists but the block didn't render — check WP Admin → Pages, edit the page. The SiteZen Section block should be visible.
+- If it's there but renders blank on the frontend, the plugin's frontend.js may not be loading. Check the page source — `sitezen-plugin/assets/js/frontend.js` should be in the `<script>` tags.
+
+**"Push to WordPress" button is grayed out**
+No target WordPress site is selected, or you have no sites connected. Add a site in **Sites** first.
+
+**Existing page push doesn't show the section**
+The block was added but you're viewing a cached page. Hard-refresh (Ctrl+Shift+R) or clear any WordPress page caching plugins.
+
+**Push duplicates content**
+You hit Push twice. WP Admin → Pages → delete the duplicate page.
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Push Targets" href="/advanced/push-targets" icon="map-pin" horizontal="false">
+    Deep dive on Page vs Template vs CPT push destinations.
+  </Card>
+
+  <Card title="Fix Issues retry" href="/advanced/fix-issues" icon="refresh-cw" horizontal="false">
+    Refine a conversion before pushing.
+  </Card>
+</Columns>

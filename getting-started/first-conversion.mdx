@@ -1,0 +1,202 @@
+---
+title: Your First Conversion
+description: Walk through converting your first Figma section into a live WordPress page.
+---
+
+## What you'll do
+
+Take a Figma design and turn it into a real WordPress page. About 5 minutes start to finish.
+
+## Before you start
+
+Make sure you've completed:
+
+- [Installed the plugin](/getting-started/installing-plugin) on your WordPress site
+- [Connected the plugin](/getting-started/connect-plugin) to the SiteZen platform
+- [Added your Figma token](/getting-started/figma-token) to the platform
+
+If any of those are incomplete, the Convert button won't work. Finish them first.
+
+## The Convert page tour
+
+When you open the platform → **Convert**, you'll see fields for:
+
+| Field | What it's for |
+|---|---|
+| **Figma section URL** | Tells SiteZen which Figma frame to read |
+| **Figma access token** | Authorizes reading your Figma file |
+| **Section screenshot** | Tells SiteZen exactly what the layout should look like |
+| **Target WordPress site** | Where the converted result lands |
+| **Where should this section land?** | Page, Template, or CPT |
+
+We'll fill in each one.
+
+[SCREENSHOT: Platform Convert page with all fields visible but empty]
+
+## Step 1: Pick the right section in Figma
+
+The best section to start with: **a simple hero section, an about block, or a CTA section** with mostly text + 1-2 images. Save complex tabs/sliders for later — start small.
+
+<Steps>
+  <Step title="Open your Figma file" icon="figma" title-type="p">
+    Open Figma in a new tab.
+  </Step>
+
+  <Step title="Find the section frame" icon="search" title-type="p">
+    In the **Layers panel** on the left, look for the top-level frame that represents your section. It should be the wrapper around all the content (heading + subhead + images + buttons), not an individual text node.
+  </Step>
+
+  <Step title="Right-click → Copy link to selection" icon="link" title-type="p">
+    Right-click that frame → **Copy link to selection**. The URL is now in your clipboard.
+
+    The URL looks like: `https://www.figma.com/design/abc123.../?node-id=12:345`
+  </Step>
+</Steps>
+
+<Callout kind="alert" collapsed="false">
+  **Pick the SECTION frame, not a child element.** If you right-click a single button or heading, SiteZen will only convert that one element. Right-click the OUTERMOST container of the section.
+</Callout>
+
+[SCREENSHOT: Figma layers panel with a section frame right-clicked, "Copy link to selection" highlighted]
+
+## Step 2: Take a screenshot of the section
+
+The screenshot is your ground-truth visual. SiteZen uses it to know exactly how the layout should look. Make it clean and accurate.
+
+<Steps>
+  <Step title="In Figma, zoom to fit the section" icon="zoom-in" title-type="p">
+    Press **2** on your keyboard with the section selected — Figma zooms to fit.
+  </Step>
+
+  <Step title="Screenshot just the section" icon="image" title-type="p">
+    - **Mac**: Cmd+Shift+4, drag a box around the section
+    - **Windows**: Win+Shift+S, drag a box around the section
+    - **Or**: in Figma, right-click the frame → **Copy as PNG**
+  </Step>
+
+  <Step title="Verify quality" icon="check" title-type="p">
+    Open the screenshot in your file viewer. It should be sharp, show ALL the content in the section, and NOT include unrelated UI like Figma's panels.
+  </Step>
+</Steps>
+
+[SCREENSHOT: Example of a good section screenshot — clean, all content visible, no Figma UI]
+
+## Step 3: Fill in the Convert form
+
+<Steps>
+  <Step title="Paste the Figma URL" icon="clipboard" title-type="p">
+    Paste the URL you copied in Step 1 into the **Figma section URL** field.
+  </Step>
+
+  <Step title="Verify the Figma token is there" icon="key" title-type="p">
+    The **Figma access token** field should already show your token from when you set it up. If empty, paste it again from your Figma settings.
+  </Step>
+
+  <Step title="Drop in the screenshot" icon="upload" title-type="p">
+    Drag your screenshot file onto the **Section screenshot** area, or click to browse. You'll see a thumbnail appear when it uploads.
+  </Step>
+
+  <Step title="Pick your target WordPress site" icon="globe" title-type="p">
+    Select your site from the **Target WordPress site** dropdown. (If empty, you haven't connected a site yet — see [Connect Plugin](/getting-started/connect-plugin).)
+  </Step>
+
+  <Step title="Choose Page → New page" icon="file" title-type="p">
+    Under **Where should this section land?**, click **Page**, then **New page**. This creates a fresh WordPress page for your conversion.
+  </Step>
+</Steps>
+
+[SCREENSHOT: Convert page with all fields filled in]
+
+## Step 4: Run the conversion
+
+Click **Convert this section**. A progress indicator appears.
+
+What happens during this ~30-60 seconds:
+1. SiteZen reads your Figma file (text, colors, fonts, images)
+2. Sends the data + your screenshot to the AI engine
+3. AI generates HTML matching your design pixel-perfectly
+4. Post-processing applies WordPress conventions
+5. Preview loads in your browser
+
+[SCREENSHOT: Loading state during conversion]
+
+<Callout kind="info" collapsed="false">
+  First conversion takes longer (~45-60s) because the AI's cache is cold. Subsequent conversions in the same session are faster (~25-40s).
+</Callout>
+
+## Step 5: Review the preview
+
+When conversion completes, you'll see your design rendered. Three viewports are available at the top:
+
+- **Desktop** (default)
+- **Tablet**
+- **Mobile**
+
+Click each to see how it responds. The mobile view will have stacked elements and shrunk fonts.
+
+[SCREENSHOT: Preview page showing Desktop/Tablet/Mobile toggle]
+
+### If it looks right → push to WordPress
+
+Click **Push to WordPress** in the top right. After a few seconds, you'll get a success message with a link to the live page.
+
+### If something's off → use Fix issues
+
+Click **Fix issues** in the top right. A dialog appears where you can:
+- Describe what's wrong in plain English ("the heading should be bigger", "the button color is wrong")
+- Optionally upload a marked-up screenshot with arrows/circles pointing to the problem
+
+Click **Apply fixes**. The AI re-runs with your feedback, making surgical fixes only to what you flagged.
+
+See [Fix Issues retry flow](/advanced/fix-issues) for more.
+
+## Step 6: View your live page
+
+After pushing, click the page URL in the success notice (or go to WP Admin → Pages → find the new page → View).
+
+You'll see your section live on WordPress. It's:
+- **Fully editable** — click any element in the Gutenberg editor to change text, swap images, edit colors
+- **Responsive** — mobile and tablet styles are already applied
+- **Interactive** — tabs/accordions/sliders work without any extra setup
+
+[SCREENSHOT: Final converted section live on the WordPress frontend]
+
+## Tips for great results
+
+1. **Start with simple sections.** Hero, CTA, about — these convert nearly perfectly on the first try. Complex tabs/forms may need a retry.
+
+2. **Use clean Figma files.** Auto-layout frames convert better than absolute-positioned chaos. If you have time, organize layers before converting.
+
+3. **Match the screenshot to the section.** If your screenshot shows the whole page but the Figma URL points at just a sub-section (or vice versa), the engine gets confused.
+
+4. **Verbatim text matters.** SiteZen copies your Figma text exactly. If you have placeholder lorem ipsum, it'll end up in WordPress. Replace it with real copy before converting.
+
+5. **Use high-quality images in Figma.** SiteZen exports them at 2x resolution by default.
+
+## Common issues
+
+**"Conversion took too long (over 60s)"**
+The section is too complex for the current plan's time limit. Either:
+- Convert a smaller sub-section
+- Upgrade to a plan with longer conversion time
+
+**"Wrong section converted"**
+The Figma URL points at a different element than your screenshot shows. Re-copy the link from the right frame (the outer section, not a child).
+
+**"Result looks wrong"**
+Use the [Fix Issues](/advanced/fix-issues) button to refine. The AI will only fix what you flag — won't change other parts.
+
+**"Push to WordPress failed"**
+Check that your WordPress site is reachable and the connection key is still valid. See [Connect Plugin troubleshooting](/getting-started/connect-plugin#common-issues).
+
+## What's next
+
+<Columns cols="2">
+  <Card title="Push Targets" href="/advanced/push-targets" icon="map-pin" horizontal="false">
+    Learn the differences between Page, Template, and CPT push targets.
+  </Card>
+
+  <Card title="Block Features" href="/blocks/section-block" icon="layers" horizontal="false">
+    Explore tabs, accordions, sliders, and other interactive blocks.
+  </Card>
+</Columns>

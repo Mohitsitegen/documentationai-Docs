@@ -1,0 +1,142 @@
+---
+title: Connect Plugin to Platform
+description: Link your WordPress site to the SiteZen platform using a connection key.
+---
+
+## What it does
+
+This step tells the SiteZen platform "here's where to push converted designs". You're creating a secure link between:
+
+- **Your WordPress site** (where the plugin is installed) and
+- **The SiteZen platform** (where you run conversions)
+
+The link uses a **connection key** — a unique random string that authorizes the platform to push HTML to your WordPress site via REST API.
+
+## When to do this
+
+Once per WordPress site, right after installing the plugin. If you connect 3 client sites, you'll do this 3 times.
+
+## Before you start
+
+- The SiteZen plugin installed and active on your WordPress site
+- A SiteZen platform account ([sign up](https://sitezen-platform.vercel.app) if you don't have one)
+- Your WordPress site reachable from the public internet (not on localhost behind a firewall)
+
+## Step-by-step
+
+### 1. Copy your connection key from WordPress
+
+<Steps>
+  <Step title="Open SiteZen settings" icon="settings" title-type="p">
+    WP Admin → **SiteZen → Settings**.
+  </Step>
+
+  <Step title="Find the Connection Key" icon="key" title-type="p">
+    A unique key is shown at the top. It looks like `sz_8f3a2b9c4d7e1f5a...`.
+  </Step>
+
+  <Step title="Copy it" icon="copy" title-type="p">
+    Click the **Copy** button next to the key.
+  </Step>
+</Steps>
+
+[SCREENSHOT: SiteZen Settings page in WP Admin showing the connection key with a Copy button]
+
+<Callout kind="alert" collapsed="false">
+  Treat your connection key like a password. Anyone with the key can push content to your WordPress site. Don't share it publicly.
+</Callout>
+
+### 2. Add your site to the platform
+
+<Steps>
+  <Step title="Open the platform" icon="external-link" title-type="p">
+    Go to [sitezen-platform.vercel.app](https://sitezen-platform.vercel.app) and sign in.
+  </Step>
+
+  <Step title="Navigate to Sites" icon="globe" title-type="p">
+    Click **Sites** in the left sidebar.
+  </Step>
+
+  <Step title="Add a new site" icon="plus" title-type="p">
+    Click **Add Site** in the top right.
+  </Step>
+
+  <Step title="Fill in the form" icon="edit" title-type="p">
+    - **Site Name**: any nickname for your reference (e.g. "Client A — Production")
+    - **Site URL**: the WordPress site URL (e.g. `https://clientA.com`) — include `https://`
+    - **Connection Key**: paste the key you copied from WordPress
+  </Step>
+
+  <Step title="Save" icon="check" title-type="p">
+    Click **Save**. The platform tests the connection.
+  </Step>
+</Steps>
+
+[SCREENSHOT: Platform Sites page with the "Add Site" form filled out]
+
+### 3. Verify the connection
+
+A green **Connected** badge should appear next to your site within 2-3 seconds.
+
+If you see a red **Connection Failed** badge instead, see the troubleshooting section below.
+
+## What happens after connecting
+
+- The site appears in the **Target WordPress site** dropdown on the **Convert** page
+- The platform can now push converted HTML to this site
+- The connection persists — you only do this once
+
+## Common issues
+
+**"Connection Failed: 401 Unauthorized"**
+The connection key is wrong. Re-copy it from WP Admin → SiteZen → Settings, making sure no extra spaces are included. Paste fresh and Save again.
+
+**"Connection Failed: ENOTFOUND" or "ECONNREFUSED"**
+The platform can't reach your WordPress site. Check:
+- The site URL is correct (and includes `https://`)
+- The site is publicly accessible (not localhost, not behind a corporate firewall)
+- The WordPress REST API is enabled (some security plugins disable it — temporarily deactivate them to test)
+
+**"Connection Failed: 404 Not Found"**
+WordPress responded but the SiteZen plugin isn't active. Go to WP Admin → Plugins and confirm SiteZen is activated.
+
+**"Connection Failed: 500 Internal Server Error"**
+WordPress had an error processing the request. Check `wp-content/debug.log` (if WP_DEBUG is enabled) for the specific error. Usually a plugin conflict — try deactivating other plugins one by one.
+
+**Connection works but pushes fail later**
+Your WordPress site may have changed its URL (e.g. from `http://` to `https://`). Edit the site in the platform → update the URL → save.
+
+## Managing multiple sites
+
+You can connect as many WordPress sites as your plan allows:
+
+- **Starter plan**: 3 sites
+- **Studio plan**: 10 sites
+- **Agency plan**: unlimited sites
+
+Each site has its own connection key. You can switch between them on the Convert page using the **Target WordPress site** dropdown.
+
+## Disconnecting a site
+
+To remove a site from the platform:
+
+1. Platform → **Sites** → click the site
+2. Click **Remove** at the bottom
+
+This only removes the link in the platform. The plugin remains on WordPress.
+
+To fully disconnect:
+1. Remove from platform (above)
+2. WP Admin → **SiteZen → Settings** → **Regenerate Connection Key** (invalidates the old key)
+
+## Related guides
+
+<Columns cols="2">
+  <Card title="Get Figma Token" href="/getting-started/figma-token" icon="figma" horizontal="false">
+    Generate a Figma access token so the platform can read your designs.
+  </Card>
+
+  <Card title="Your First Conversion" href="/getting-started/first-conversion" icon="zap" horizontal="false">
+    Convert your first Figma section to a WordPress page.
+  </Card>
+</Columns>
